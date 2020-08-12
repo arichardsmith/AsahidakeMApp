@@ -1,0 +1,12 @@
+.ol-scale-line {
+	position: absolute;
+	width: auto;
+	bottom: 8%;
+	left: 2%;
+	color: red;
+	background: black;
+	background-color: transparent;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	/*border-radius: 2px;*/
+	/*border: 1.5px solid #703841ff;*/
+}

@@ -1,0 +1,52 @@
+
+:root {
+    --main-color-L1: #e4f9f5;
+    --main-color-L2: #30e3ca;
+    --main-color-L3: #11999e;
+    --main-color-L4: #40514e;
+}
+.buttonH {
+    margin: 5px 5px 5px;
+    padding: 1em 2em;
+    border: none;
+    display: inline-block;
+    background-color: var(--main-color-L3);
+    box-shadow: 0 6px #4063A4;
+    font-size: 114%;
+    line-height: 1;
+    color: #fff;
+    position: relative;
+    cursor: pointer;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.5);
+    top: 0;
+    transition: .2s all;
+}
+.buttonH:hover {
+     top: -2px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.5);
+}
+.buttonH:active {
+    box-shadow: 0 1px 1px rgba(0,0,0,.5);
+    top: 0;
+}
+
+#toTop {
+    position: fixed;
+    bottom: 2%;
+    right: 2%;
+
+    margin: 5px 5px 5px;
+    padding: 1em 2em;
+    border: none;
+    display: inline-block;
+    background-color: var(--main-color-L3);
+    box-shadow: 0 6px #4063A4;
+    font-size: 114%;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.5);
+   /* transition: .2s all;*/
+}
