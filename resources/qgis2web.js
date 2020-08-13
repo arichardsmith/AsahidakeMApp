@@ -178,9 +178,9 @@ onClick('pan-to-nakadakeOnsen',function(){
     view.setZoom(14);
 
     //ポップアップ "中岳温泉"
-    content.innerHTML = '<p>中岳温泉</p>'
-    overlayPopup.setPosition(markerNakadakeOnsen);
-    container.style.display = 'block'; 
+    // content.innerHTML = '<p>中岳温泉</p>'
+    // overlayPopup.setPosition(markerNakadakeOnsen);
+    // container.style.display = 'block'; 
 });
 
 
