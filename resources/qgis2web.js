@@ -155,12 +155,12 @@ onClick('aboutAsahidake', function() {
     view.setZoom(16.5);
     scrollTo(0,0);
     $(function(){
-        $("#column").load("aboutAsahidake.html");
+        $("#column").load("aboutDaisetsuzan.html");
         $("html,body").animate({scrollTop:position},600);
     });
 });
 
-onClick('pan-to-sugatami', function() {
+onClick('aboutSugatami', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
     $(function(){
@@ -168,14 +168,20 @@ onClick('pan-to-sugatami', function() {
     });
 });
 
-onClick('pan-to-asahidake',function(){
+onClick('aboutTrailToPeak',function(){
     view.setCenter(asahidake);
     view.setZoom(15);
+    $(function(){
+        $("#column").load("aboutTrailToPeak.html");
+    });
 });
 
-onClick('pan-to-nakadakeOnsen',function(){
+onClick('about6hLoop',function(){
     view.setCenter(nakadakeOnsen);
     view.setZoom(14);
+    $(function(){
+        $("#column").load("about6hLoop.html");
+    });
 
     //ポップアップ "中岳温泉"
     // content.innerHTML = '<p>中岳温泉</p>'
@@ -640,7 +646,7 @@ var scrollPoint = document.getElementById('column'); // 移動させたい位置
 var rect = scrollPoint.getBoundingClientRect();
 var position = rect.top;    // 一番上からの位置を取得
 $(function(){
-        $("#column").load("aboutAsahidake.html");
+        $("#column").load("aboutDaisetsuzan.html");
         $("html,body").delay(1000).animate({scrollTop:position},1000);
 });
 
