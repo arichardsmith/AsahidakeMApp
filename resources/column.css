@@ -25,52 +25,55 @@
 }
 html, body {
   /*width: 100%;
-  height: auto%;
+  height: auto;
   padding: 0;
   margin: 0;*/         
   font-family: source-han-serif-japanese;
   font-weight: 400;
   font-style: normal;
+  font-size: 62.5%;
 }
 .title {
-  font-size: 60px;
+  font-size: 6rem;
   padding: 0;
   color: var(--main-color-L4);
   display: block;
-  margin:0% 12% 1%;
+  margin:1% 12% 1%;
 }
 .heading {
-  font-size: 40px;
+  font-size: 4rem;
   color: var(--main-color-L3);
   display: block;
-  margin:0% 12% 1%;
+  margin:1% 12% 1%;
 }
 .chapter{
-  margin:0% 12% 2%;
+  margin:0% 12% 1%;
   text-align: justify;
   color: #40514e;
   font-size: var(--fontSize-2);
   display: block;
 }
 .headImg {
+  margin:0% 0% 1%;
   width:100%;
   height:visible;
 } 
 
 .LeftSideImg{
 /*  margin:2% 50% 2% 12%;*/
-  margin:0% 0% 0% 12%;
+  margin:0% 0% 1% 12%;
   width:35%;
   height: auto;
   display: inline-block;
   vertical-align: top;
 }
+/*12 +(35)+ 0%    2 + (38.6) + 12*/
 
 .RightSideChapter{
-  margin:0% 12% 0% 5%;
+  margin:0% 12% 1% 2%;
 /*  margin-left: 5%;
   margin-right: 12%;*/
-  width:35%;
+  width:38.6%;
   text-align: justify;
   color: #40514e;
   font-size: var(--fontSize-2);
@@ -78,6 +81,11 @@ html, body {
   vertical-align: top;
 }
 .img {
-  margin:0% 12% 2%;
+  margin:0% 12% 1%;
   width:76%;
+  display: block;
+}
+figcaption {
+  position: relative;
+  text-align:center;
 }

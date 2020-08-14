@@ -12,7 +12,7 @@
     display: inline-block;
     background-color: var(--main-color-L3);
     box-shadow: 0 6px #4063A4;
-    font-size: 114%;
+    font-size: 1.5rem;
     line-height: 1;
     color: #fff;
     position: relative;
@@ -42,7 +42,7 @@
     display: inline-block;
     background-color: var(--main-color-L3);
     box-shadow: 0 6px #4063A4;
-    font-size: 114%;
+    font-size: 1rem;
     line-height: 1;
     color: #fff;
     cursor: pointer;
