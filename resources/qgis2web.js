@@ -205,7 +205,8 @@ var isAnyPicVisible = function(){
  var pictureOnClick =  function(layer,id){
     return function(){
         console.dir('pictureOnClick');
-        content.innerHTML = '<p>' + 'test' + '</P>' ;
+        content.innerHTML='';
+        //content.innerHTML = '<p>' + 'test' + '</P>' ;
         var dir = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
         content.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id=' + id + ' alt="test Pic">'
         var point = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.geometry.flatCoordinates;
@@ -465,7 +466,9 @@ var onSingleClick = function(evt) {
     var currentFeature;
     var currentFeatureKeys;
     var clusteredFeatures;
-    var popupText = '<ul>';
+    //var popupText = '<ul>';
+    var popupText = '';
+
     map.forEachFeatureAtPixel(pixel, function(feature, layer) {
 
         if(layer === layersList[2].values_.layers.array_[0]　 || layer === layersList[2].values_.layers.array_[1]){ //写真レイヤーのみPopUpに指定
@@ -513,20 +516,20 @@ var onSingleClick = function(evt) {
             } else {
                 currentFeatureKeys = currentFeature.getKeys();
                 if (doPopup) {
-                    popupText += '<li><table>';
+                    //popupText += '<li><table>';
                     for (var i=0; i<currentFeatureKeys.length; i++) {
                         if (currentFeatureKeys[i] != 'geometry') {
                             popupField = '';
                             if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
-                                popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
+                                //popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
                             } else {
-                                popupField += '<td colspan="2">';
+                                //popupField += '<td colspan="2">';
                             }
                             if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
-                                popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
+                                //popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
                             }
                             if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
-                                popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(currentFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
+                                //popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(currentFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
                             } else {
                                 //console.log(JSON.stringify(layer));
                                 //console.dir(layer);
@@ -536,16 +539,16 @@ var onSingleClick = function(evt) {
                             popupText += '<tr>' + popupField + '</tr>';
                         }
                     }
-                    popupText += '</table>';
+                    //popupText += '</table>';
                 }
             }
         }
     }});
-    if (popupText == '<ul>') {
-        popupText = '';
-    } else {
-        popupText += '</ul>';
-    }
+    // if (popupText == '<ul>') {
+    //     popupText = '';
+    // } else {
+    //     popupText += '</ul>';
+    // }
     //layersList[2]つまり最後に写真のレイヤーが入っている
     //layersList[2].values_.layers.array_[0]が写真レイヤー
     

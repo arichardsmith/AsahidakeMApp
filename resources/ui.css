@@ -7,7 +7,7 @@
 }
 .buttonH {
     margin: 5px 5px 5px;
-    padding: 1em 2em;
+    padding: 0.4em 0.6em;
     border: none;
     display: inline-block;
     background-color: var(--main-color-L3);
