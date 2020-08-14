@@ -23,7 +23,7 @@
     transition: .2s all;
 }
 .buttonH:hover {
-     top: -2px;
+    top: -2px;
     box-shadow: 0 2px 10px rgba(0,0,0,.5);
 }
 .buttonH:active {
