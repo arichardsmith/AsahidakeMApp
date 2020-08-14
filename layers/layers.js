@@ -148,7 +148,9 @@ var lyr_tileBaseMap = new ol.layer.Tile({
 }),
     interactive: true,
     title: '<img src="styles/legend/tileBaseMap.png" /> tileBaseMap',
-    extent: [15890318.745446, 5400538.430031, 15919312.888073, 5427467.531399]
+    extent: [15890800.0,      5401150.0,      15918700.0,      5426850.0]
+             
+
 });
 //---test tile till here
 
