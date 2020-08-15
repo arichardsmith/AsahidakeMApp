@@ -56,7 +56,7 @@ html, body {
 .headImg {
   margin:0% 0% 1%;
   width:100%;
-  height:visible;
+  height:auto;
 } 
 
 .LeftSideImg{

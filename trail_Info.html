@@ -1,33 +1,79 @@
 <style>
 
-.layoutBox {
-  display: inline-block;
-  width: 300px;
-  height: 300px;
-  margin: 1em;
+.boxArea {
+  display : flex;
+  flex-wrap : wrap;
+  justify-content: space-between;
+}
+.boxArea::before {
+  content: "";
+  display: block;
+  width: 24%;
+  order: 1;
+}
+.boxArea::after {
+  content: "";
+  display: block;
+  width: 24%;
+}
 
-  line-height: 1;
-  border-radius: 3px;
+.layoutBox {
+	display: inline-block;
+	width: 300px;
+	height: 300px;
+	margin: 2em;
+
+	padding: 0.5em 1em;
+	color: var(--main-color-L1);
+	background: var(--main-color-L1);
+	border-top: solid 5px var(--main-color-L1);
+	box-shadow: 0 3px 5px rgba(0,0,0,0.22);
+}
+
+.layoutBox h1{
+	font-size: var(--fontSize-4);
+}
+
+.layoutBox a{
+	font-size: var(--fontSize-3);
+	color:var(--main-color-L4);
+	text-align:center;
 }
 
 
 </style>
 
+<div id="boxArea">
 
-<span class="title">各種情報</span>
+	<span class="heading">各種情報</span>
 
 
-<div class="layoutBox">
-	<a>I hate CSS</a>
+	<div class="layoutBox">
+		<a>I hate CSS</a><br>
+		<img style="width:50%" src="http://211.18.244.62/webcam/webimg/asahidake.JPG">
+	</div>
+
+	<div class="layoutBox">
+		<a>CSS make me clanky</a>
+
+	</div>
+
+	<div class="layoutBox">
+		<a>hogehoge</a>
+
+	</div>
+
+	<div class="layoutBox">
+		<a>hogehoge</a>
+
+	</div>
+
+	<div class="layoutBox">
+		<a>hogehoge</a>
+
+	</div>
+
 
 </div>
 
-<div class="layoutBox">
-	<a>CSS make me clanky</a>
 
-</div>
-
-<div class="layoutBox">
-	<a>hogehoge</a>
-
-</div>
