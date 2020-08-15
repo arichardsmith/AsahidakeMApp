@@ -10,10 +10,12 @@
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <script src="resources/jck1asa_font.js"></script>
-        <link rel="stylesheet" href="./resources/ui.css">
+        
         <!-- pcとspでスタイルシートを分岐 -->
             <link rel="stylesheet" media="screen and (max-width:768px)" href="./resources/column_sp.css">
             <link rel="stylesheet" media="screen and (min-width:769px)" href="./resources/column.css">
+
+        <link rel="stylesheet" href="./resources/ui.css">
         <link rel="stylesheet" href="./resources/ol.css">
         <link rel="stylesheet" href="resources/fontawesome-all.min.css">
         <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
@@ -87,9 +89,16 @@
             <button class="buttonH" id="aboutAsahidake">大雪山について</button>
             <button class="buttonH" id="aboutSugatami">姿見散園地</button>
             <button class="buttonH" id="aboutTrailToPeak">旭岳登頂コース</button>
-            <button class="buttonH" id="about6hLoop">一日周回コース</button>
-            
+            <button class="buttonH" id="about6hLoop">一日周回コース</button>    
         </div>
+
+        <div style="text-align: center;">
+            <div id="toColumn">
+                <img src="images/downArrow.png">
+                <a>大雪山について 読む</a>
+            </div>
+        </div>
+
         <button id="toTop" style="display: none;">地図</button>
 
 

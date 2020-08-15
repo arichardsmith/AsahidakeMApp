@@ -123,28 +123,38 @@ var scrollPoint = document.getElementById('column'); // 移動させたい位置
 var rect = scrollPoint.getBoundingClientRect();
 var position = rect.top;    // 一番上からの位置を取得
 
-//トップボタンの表示
+
 $(function(){
-  var pagetop = $('#toTop');
-  pagetop.hide();
-  console.log($(window).height());
+    //トップボタンの表示
+    var ToTopBtn = $('#toTop');
+    ToTopBtn.hide();
+    console.log($(window).height());
     // positionまでスクロールしたらボタン表示
     $("html,body").scroll(function () {
         if (($(this).scrollTop() > (position - $(window).height()*0.2) ) && ($('#toTop').is(':hidden'))){
-            pagetop.fadeIn();
+            ToTopBtn.fadeIn();
             console.log('fadeIn');
         } else if(($(this).scrollTop() <= (position - $(window).height()*0.2)) && ($('#toTop').is(':visible'))){
-            pagetop.fadeOut();
+            ToTopBtn.fadeOut();
             console.log('fadeOut');
         }
     });
-  pagetop.click(function () {
-     $('body, html').animate({scrollTop: 0 }, 500);
-     return false;
-  });
+    //トップボタンのクリックイベント
+    ToTopBtn.click(function () {
+        $('body, html').animate({scrollTop: 0 }, 500);
+        return false;
+    });
+
+    //記事ボタンのクリックイベント
+    $('#toColumn').click(function () {
+        $('body, html').animate({scrollTop: position }, 500);
+        return false;
+    });    
+
+
 });
 
-
+const toColumn = document.getElementById('toColumn');
 //クリックイベント関数の簡略化
 function onClick(id, callback) {
     document.getElementById(id).addEventListener('click', callback);
@@ -154,6 +164,7 @@ onClick('aboutAsahidake', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
     scrollTo(0,0);
+    toColumn.innerHTML='大雪山について 読む'
     $(function(){
         $("#column").load("aboutDaisetsuzan.html");
         $("html,body").animate({scrollTop:position},600);
@@ -163,6 +174,7 @@ onClick('aboutAsahidake', function() {
 onClick('aboutSugatami', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
+    toColumn.innerHTML='姿見園地について 読む'
     $(function(){
         $("#column").load("aboutSugatami.html");
     });
@@ -171,6 +183,7 @@ onClick('aboutSugatami', function() {
 onClick('aboutTrailToPeak',function(){
     view.setCenter(asahidake);
     view.setZoom(15);
+    toColumn.innerHTML='旭岳山頂ルートについて 読む'
     $(function(){
         $("#column").load("aboutTrailToPeak.html");
     });
@@ -179,6 +192,7 @@ onClick('aboutTrailToPeak',function(){
 onClick('about6hLoop',function(){
     view.setCenter(nakadakeOnsen);
     view.setZoom(14);
+    toColumn.innerHTML='一日周回コースについて 読む'
     $(function(){
         $("#column").load("about6hLoop.html");
     });
