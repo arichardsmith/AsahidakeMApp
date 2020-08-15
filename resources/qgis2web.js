@@ -163,7 +163,7 @@ function onClick(id, callback) {
 onClick('aboutAsahidake', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
-    scrollTo(0,0);
+ //   scrollTo(0,0);
     toColumn.innerHTML='大雪山について 読む'
     $(function(){
         $("#column").load("aboutDaisetsuzan.html");
@@ -201,6 +201,14 @@ onClick('about6hLoop',function(){
     // content.innerHTML = '<p>中岳温泉</p>'
     // overlayPopup.setPosition(markerNakadakeOnsen);
     // container.style.display = 'block'; 
+});
+
+onClick('trail_Info',function(){
+    toColumn.innerHTML='各種情報 読む';
+    $(function(){
+        $("#column").load("trail_Info.html");
+        $("html,body").animate({scrollTop:position},600);
+    });
 });
 
 
