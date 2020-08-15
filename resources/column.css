@@ -89,6 +89,6 @@ figcaption {
   position: relative;
   text-align:center;
 }
-img{
+.img > img{
   width: 100%;
 }
