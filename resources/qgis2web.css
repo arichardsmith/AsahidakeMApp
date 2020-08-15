@@ -60,7 +60,7 @@ th, td {
 /*ポップアップ設定*/
 .ol-popup {
     position: absolute;
-    background-color: white;
+    background-color: #e4f9f5;
     -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
     filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
     padding: 1px;
@@ -80,7 +80,7 @@ th, td {
     pointer-events: none;
 }
 .ol-popup:after {
-    border-top-color: white;
+    border-top-color: #e4f9f5;
     border-width: 10px;
     left: 48px;
     margin-left: -10px;
