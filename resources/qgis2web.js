@@ -124,35 +124,35 @@ var rect = scrollPoint.getBoundingClientRect();
 var position = rect.top;    // 一番上からの位置を取得
 
 
-$(function(){
-    //トップボタンの表示
-    var ToTopBtn = $('#toTop');
-    ToTopBtn.hide();
-    console.log($(window).height());
-    // positionまでスクロールしたらボタン表示
-    $("html,body").scroll(function () {
-        if (($(this).scrollTop() > (position - $(window).height()*0.2) ) && ($('#toTop').is(':hidden'))){
-            ToTopBtn.fadeIn();
-            console.log('fadeIn');
-        } else if(($(this).scrollTop() <= (position - $(window).height()*0.2)) && ($('#toTop').is(':visible'))){
-            ToTopBtn.fadeOut();
-            console.log('fadeOut');
-        }
-    });
-    //トップボタンのクリックイベント
-    ToTopBtn.click(function () {
-        $('body, html').animate({scrollTop: 0 }, 500);
-        return false;
-    });
+// $(function(){
+//     //トップボタンの表示
+//     var ToTopBtn = $('#toTop');
+//     ToTopBtn.hide();
+//     console.log($(window).height());
+//     // positionまでスクロールしたらボタン表示
+//     $("html,body").scroll(function () {
+//         if (($(this).scrollTop() > (position - $(window).height()*0.2) ) && ($('#toTop').is(':hidden'))){
+//             ToTopBtn.fadeIn();
+//             console.log('fadeIn');
+//         } else if(($(this).scrollTop() <= (position - $(window).height()*0.2)) && ($('#toTop').is(':visible'))){
+//             ToTopBtn.fadeOut();
+//             console.log('fadeOut');
+//         }
+//     });
+//     //トップボタンのクリックイベント
+//     ToTopBtn.click(function () {
+//         $('body, html').animate({scrollTop: 0 }, 500);
+//         return false;
+//     });
 
-    //記事ボタンのクリックイベント
-    $('#toColumn').click(function () {
-        $('body, html').animate({scrollTop: position }, 500);
-        return false;
-    });    
+//     //記事ボタンのクリックイベント
+//     $('#toColumn').click(function () {
+//         $('body, html').animate({scrollTop: position }, 500);
+//         return false;
+//     });    
 
 
-});
+// });
 
 const toColumn = document.getElementById('toColumn');
 //クリックイベント関数の簡略化
@@ -667,12 +667,12 @@ map.on("rendercomplete", function(evt) {
     }
 })
 
-var scrollPoint = document.getElementById('column'); // 移動させたい位置の要素を取得
-var rect = scrollPoint.getBoundingClientRect();
-var position = rect.top;    // 一番上からの位置を取得
-$(function(){
-        $("#column").load("aboutDaisetsuzan.html");
-        $("html,body").delay(1000).animate({scrollTop:position},1000);
-});
+// var scrollPoint = document.getElementById('column'); // 移動させたい位置の要素を取得
+// var rect = scrollPoint.getBoundingClientRect();
+// var position = rect.top;    // 一番上からの位置を取得
+// $(function(){
+//         $("#column").load("aboutDaisetsuzan.html");
+//         $("html,body").delay(1000).animate({scrollTop:position},1000);
+// });
 
 
