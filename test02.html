@@ -13,13 +13,11 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <script src="resources/jck1asa_font.js"></script>
 
-            <!-- pcとspでスタイルシートを分岐 -->
-        <link rel="stylesheet" media="screen and (max-width:768px)" href="./resources/column_sp.css">
-        <link rel="stylesheet" media="screen and (min-width:769px)" href="./resources/column.css">
         
 
         <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" defer ></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" />
+        <!-- <link rel="stylesheet" href="resources/bulma.css" /> -->
         
         <link rel="stylesheet" href="./resources/ol.css">
         <link rel="stylesheet" href="resources/fontawesome-all.min.css">
@@ -67,67 +65,80 @@
             height: auto;
             overflow:scroll;
         } 
-        $navbar-height:5em;
         </style>
 
 
     </head>
     <body>
 
-<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
-      <img src="images/logo.png" style="height:100%; ">
-    </a>
-  </div>
-
-  <!-- <div id="navbarBasicExample" class="navbar-menu"> -->
-    <div class="navbar-end">
-      <a class="navbar-item" id="aboutAsahidake">
-        大雪山について
-      </a>
-      <a class="navbar-item">
-        大雪山グレードについて   
-      </a>
-      <a class="navbar-item" id="aboutSugatami">
-        姿見園地  
-      </a>
-    
-        <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              登山情報
+        <!-- /*ナビゲーションバー*/ -->
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://bulma.io">
+                <img src="images/logo.png" style="height:100%; ">
             </a>
 
-            <div class="navbar-dropdown">
-              <a class="navbar-item" id="trail_Info">
-                登山道情報
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item" id="aboutTrailToPeak">
-                旭岳登頂コース
-              </a>
-              <a class="navbar-item">
-                裾合いコース
-              </a>
-              <a class="navbar-item" id="about6hLoop">
-                一日周回コース
-              </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" >
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-end">
+                <a class="navbar-item" id="aboutAsahidake">
+                    大雪山について
+                </a>
+                <a class="navbar-item">
+                    大雪山グレードについて   
+                </a>
+                <a class="navbar-item" id="aboutSugatami">
+                    姿見園地  
+                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        登山情報
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" id="trail_Info">
+                            登山道情報
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" id="aboutTrailToPeak">
+                            旭岳登頂コース
+                        </a>
+                        <a class="navbar-item">
+                            裾合いコース
+                        </a>
+                        <a class="navbar-item" id="about6hLoop">
+                            一日周回コース
+                        </a>
+                        <a class="navbar-item" id="about6hLoop">
+                            天女ヶ原登山道
+                        </a>
+                    </div>
+                </div>
+                <a class="navbar-item">
+                    About Us
+                </a>
             </div>
         </div>
+    </nav>
 
-        <a class="navbar-item">
-            About Us
-      </a>
-    </div>
+    <!-- ナビゲーションバーのスマホ用プルダウン-->
+    <script>
+    $(document).ready(function() {
 
+      // Check for click events on the navbar burger icon
+      $(".navbar-burger").click(function() {
 
-  <!-- </div> -->
-</nav>
+          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+          $(".navbar-burger").toggleClass("is-active");
+          $(".navbar-menu").toggleClass("is-active");
 
-
-</nav>
-
- 
+      });
+    });
+    </script>
 
     <div id="MApp">
         <div id="map">
@@ -142,14 +153,20 @@
         </div>
     </div>
 
-
-    <div id="column">
-            <!-- ここにコラム読み込まれる。 -->
-            <h1>Hello World</h1>
+<section class="section has-background-link-light" >
+    <div class="column" id="column">
+        <!-- ここにコラム読み込まれる。 -->
     </div>
+</section>
 
 
-    <a id="aboutTrailToPeak">めくら</a>
+
+
+
+<!--     <a id="aboutAsahidake">めくら</a> -->
+    <a id="aboutSugatami">めくら</a>
+
+<!--     <a id="aboutTrailToPeak">めくら</a> -->
     <a id="about6hLoop">めくら</a>
     <a id="trail_Info">めくら</a>
     <a id="toTop">めくら</a>
@@ -161,6 +178,10 @@
             $("#column").load("aboutDaisetsuzan.html");
         });
     </script>
+
+    <footer class="footer">
+        Footer
+    </footer>
 
 
       
