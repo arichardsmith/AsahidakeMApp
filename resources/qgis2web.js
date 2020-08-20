@@ -305,7 +305,7 @@ function DisplayPicColum() {
 
     let newHTML = '';
     for (let photoSrc of visiblePhotos) {
-        newHTML += imgHTML(photoSrc);
+        newHTML += imgHTML(`images/MapPics/${photoSrc}`);
     }
 
     const picColumn = document.getElementById('pic');
@@ -334,7 +334,7 @@ function handlePhotoClick(e) {
 
 //写真HTML Template
 function imgHTML(src) {
-    return `<img class="fit-picture" src="images/MapPics/${src}" alt="test Pic" />`
+    return `<img class="fit-picture" src="${src}" alt="test Pic" />`
 }
 
 //マップクリックイベント
@@ -352,7 +352,9 @@ function handleMapPointer(evt) {
         }
     })
 
-    const filteredImages = imgs.filter(img => img !== undefined); // srcのないのを抜く
+    const filteredImages = imgs
+        .filter(img => img !== undefined) // srcのないのを抜く
+        .map(img => `images/MapPics/${img}`); // Path付け
 
     if (filteredImages.length > 0) {
         // クリックした写真Pointある
