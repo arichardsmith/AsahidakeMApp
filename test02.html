@@ -15,9 +15,9 @@
 
         
 
-        <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" defer ></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" />
-        <!-- <link rel="stylesheet" href="resources/bulma.css" /> -->
+        <!-- // <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" defer ></script> -->
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" /> -->
+        <link rel="stylesheet" href="resources/bulma.css" />
         
         <link rel="stylesheet" href="./resources/ol.css">
         <link rel="stylesheet" href="resources/fontawesome-all.min.css">
@@ -59,12 +59,12 @@
             max-width:100%;
             height:auto;
         }  
-        div#column {
+/*        div#column {
             margin: 1% 13% 1% 13%;
             width: 74%;
             height: auto;
             overflow:scroll;
-        } 
+        } */
         </style>
 
 
@@ -89,7 +89,7 @@
                 <a class="navbar-item" id="aboutAsahidake">
                     大雪山について
                 </a>
-                <a class="navbar-item">
+                <a class="navbar-item" id="aboutDaisetsuzanGrade">
                     大雪山グレードについて   
                 </a>
                 <a class="navbar-item" id="aboutSugatami">
@@ -100,7 +100,7 @@
                         登山情報
                     </a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item" id="trail_Info">
+                        <a class="navbar-item" id="info">
                             登山道情報
                         </a>
                         <hr class="navbar-divider">
@@ -108,7 +108,7 @@
                             旭岳登頂コース
                         </a>
                         <a class="navbar-item">
-                            裾合いコース
+                            裾合平コース
                         </a>
                         <a class="navbar-item" id="about6hLoop">
                             一日周回コース
@@ -153,24 +153,17 @@
         </div>
     </div>
 
-<section class="section has-background-link-light" >
-    <div class="column" id="column">
-        <!-- ここにコラム読み込まれる。 -->
-    </div>
+<section class="section has-background-link-light" id="column">
+    <!-- ここに記事読み込まれる。 -->
 </section>
 
 
 
 
 
-<!--     <a id="aboutAsahidake">めくら</a> -->
-    <a id="aboutSugatami">めくら</a>
 
-<!--     <a id="aboutTrailToPeak">めくら</a> -->
-    <a id="about6hLoop">めくら</a>
-    <a id="trail_Info">めくら</a>
     <a id="toTop">めくら</a>
-    <a id="toColumn">めくら</a>
+
 
     <script>
         // 最初のコラム読み込み

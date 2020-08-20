@@ -163,106 +163,96 @@ function onClick(id, callback) {
 onClick('aboutAsahidake', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
- //   scrollTo(0,0);
-    toColumn.innerHTML='大雪山について 読む'
-    $(function(){
-        $("#column").load("aboutDaisetsuzan.html");
-        $("html,body").animate({scrollTop:position},600);
-    });
+    $("#column").load("aboutDaisetsuzan.html");
+    $("html,body").animate({scrollTop:position},600);
 });
 
 onClick('aboutSugatami', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
-    toColumn.innerHTML='姿見園地について 読む'
-    $(function(){
-        $("#column").load("aboutSugatami.html");
-    });
+    $("#column").load("aboutSugatami.html");
 });
 
 onClick('aboutTrailToPeak',function(){
     view.setCenter(asahidake);
     view.setZoom(15);
-    toColumn.innerHTML='旭岳山頂ルートについて 読む'
-    $(function(){
-        $("#column").load("aboutTrailToPeak.html");
-    });
+    $("#column").load("aboutTrailToPeak.html");
 });
 
 onClick('about6hLoop',function(){
     view.setCenter(nakadakeOnsen);
     view.setZoom(14);
-    toColumn.innerHTML='一日周回コースについて 読む'
-    $(function(){
-        $("#column").load("about6hLoop.html");
-    });
+    $("#column").load("about6hLoop.html");
 
-    //ポップアップ "中岳温泉"
-    // content.innerHTML = '<p>中岳温泉</p>'
-    // overlayPopup.setPosition(markerNakadakeOnsen);
-    // container.style.display = 'block'; 
 });
 
-onClick('trail_Info',function(){
-    toColumn.innerHTML='各種情報 読む';
-    $(function(){
-        $("#column").load("trail_Info.html");
-        $("html,body").animate({scrollTop:position},600);
-    });
+onClick('info',function(){
+    $("#column").load("info.html");
+    $("html,body").animate({scrollTop:position},600);
+
+});
+
+onClick('aboutDaisetsuzanGrade',function(){
+    $("#column").load("aboutDaisetsuzanGrade.html");
 });
 
 
 
-//写真レイヤーグループの中にVisibleがあるか
-var isAnyPicVisible = function(){
-    for(var k in layersList[2].values_.layers.array_){
-        if(layersList[2].values_.layers.array_[k].getVisible()){
-            return true;
-        }
-    }
-    return false;
-}
+// //写真レイヤーグループの中にVisibleがあるか
+// var isAnyPicVisible = function(){
+//     for(var k in layersList[2].values_.layers.array_){
+//         if(layersList[2].values_.layers.array_[k].getVisible()){
+//             return true;
+//         }
+//     }
+//     return false;
+// }
 
-//写真一覧クリック処理用
- var pictureOnClick =  function(layer,id){
-    return function(){
-        console.dir('pictureOnClick');
-        content.innerHTML='';
-        //content.innerHTML = '<p>' + 'test' + '</P>' ;
-        var dir = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
-        content.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id=' + id + ' alt="test Pic">'
-        var point = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.geometry.flatCoordinates;
-        overlayPopup.setPosition(point);
-        container.style.display = 'block';
-    }
-}
+// //写真一覧クリック処理用
+//  var pictureOnClick =  function(layer,id){
+//     return function(){
+//         console.dir('pictureOnClick');
+//         content.innerHTML='';
+//         //content.innerHTML = '<p>' + 'test' + '</P>' ;
+//         var dir = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
+//         content.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id=' + id + ' alt="test Pic">'
+//         var point = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.geometry.flatCoordinates;
+//         overlayPopup.setPosition(point);
+//         container.style.display = 'block';
+//     }
+// }
+
+
+
 
 //写真一覧の表示
 var DisplayPicColum = function(){
     console.dir('inPicColum');
     pic.innerHTML = '';
-    for(var k in layersList[2].values_.layers.array_){
-       
-        if(layersList[2].values_.layers.array_[k].getVisible() == false)continue;
-        for(var i in layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_){
-            var dir = layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_[i][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
-            var ol_uid = i;
-            pic.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id="' + ol_uid +  '" alt="test Pic">';
-            //console.dir(pic.innerHTML);
-        }
+    for(var k in layersList[2].getLayers().getArray()){
+        //console.dir(layersList[2].getLayers().getArray()[k].get('fieldImages'));
+        //console.dir(layersList[2].getLayers().getArray()[k]);
+        console.dir(layersList[2].getLayers().getArray()[k].get('source'));
+        if(layersList[2].getLayers().getArray()[k].getVisible() == false)continue;
+        // for(var i in layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_){
+        //     var dir = layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_[i][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
+        //     var ol_uid = i;
+        //     pic.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id="' + ol_uid +  '" alt="test Pic">';
+        //     //console.dir(pic.innerHTML);
+        // }
     }
     //---event 処理
-    for(var k in layersList[2].values_.layers.array_){
-        if(layersList[2].values_.layers.array_[k].getVisible() == false)continue;
-        for(var i in layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_){
-            var ol_uid = i;
-            onClick(ol_uid,pictureOnClick(k,ol_uid));
-        }
-    }
+    // for(var k in layersList[2].values_.layers.array_){
+    //     if(layersList[2].values_.layers.array_[k].getVisible() == false)continue;
+    //     for(var i in layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_){
+    //         var ol_uid = i;
+    //         onClick(ol_uid,pictureOnClick(k,ol_uid));
+    //     }
+    // }
     //---
 }
 //最初の表示
-DisplayPicColum();
+     DisplayPicColum();
 
 
 //memo
@@ -474,7 +464,6 @@ var onPointerMove = function(evt) {
 };
 
 
-//TryDoNotPopUpText onSingleClick
 var onSingleClick = function(evt) {
     if (doHover) {
         return;
@@ -484,95 +473,128 @@ var onSingleClick = function(evt) {
     }
     var pixel = map.getEventPixel(evt.originalEvent);
     var coord = evt.coordinate;
-    var popupField;
+    var popupField='';
     var currentFeature;
     var currentFeatureKeys;
     var clusteredFeatures;
-    //var popupText = '<ul>';
     var popupText = '';
 
     map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+    //     for(var l in layersList[2].getLayers().getArray()){
+    //         if(layer === layersList[2].getLayers().getArray()[l]){
+    //     //console.dir(layersList[2].values_.layers.array_[1]);
+    //         if (feature instanceof ol.Feature && (layer.get("interactive") || layer.get("interactive") == undefined)) {
+    //             var doPopup = false;
+    //             //各レイヤー　各レイヤーの'fieldImages'の中にHiddenがなければフラグ上げ//
+    //             //layer.get('fieldImages')[k]  各layerの中のfieldImages[k]取り出し
+    //             for (k in layer.get('fieldImages')) {
+    //                 if (layer.get('fieldImages')[k] != "Hidden") {
+    //                     doPopup = true;
+    //                 }
+    //             }
+    //             currentFeature = feature;
+    //             clusteredFeatures = feature.get("features");
+    //             var clusterFeature;
+    //             if (typeof clusteredFeatures !== "undefined") {
+    //                 if (doPopup) {
+    //                     for(var n=0; n<clusteredFeatures.length; n++) {
+    //                         clusterFeature = clusteredFeatures[n];
+    //                         currentFeatureKeys = clusterFeature.getKeys();
+    //                         popupText += '<li><table>'
+    //                         for (var i=0; i<currentFeatureKeys.length; i++) {
+    //                             if (currentFeatureKeys[i] != 'geometry') {
+    //                                 popupField = '';
+    //                                 if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
+    //                                 //popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
+    //                             } else {
+    //                                     //popupField += '<td colspan="2">';
+    //                                 }
+    //                                 if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
+    //                                     //popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
+    //                                 }
+    //                                 if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
+    //                                 //    popupField += (clusterFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(clusterFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
+    //                             } else {
+    //                                 //    popupField += (clusterFeature.get(currentFeatureKeys[i]) != null ? '<img src="images/' + clusterFeature.get(currentFeatureKeys[i]).replace(/[\\\/:]/g, '_').trim()  + '"width="200" /></td>' : '');
+    //                             }
+    //                             popupText += '<tr>' + popupField + '</tr>';
+    //                         }
+    //                     } 
+    //                     popupText += '</table></li>';    
+    //                 }
+    //             }
+    //         } else {
+    //             currentFeatureKeys = currentFeature.getKeys();
+    //             if (doPopup) {
+    //                     //popupText += '<li><table>';
+    //                     for (var i=0; i<currentFeatureKeys.length; i++) {
+    //                         if (currentFeatureKeys[i] != 'geometry') {
+    //                             popupField = '';
+    //                             if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
+    //                                 //popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
+    //                             } else {
+    //                                 //popupField += '<td colspan="2">';
+    //                             }
+    //                             if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
+    //                                 //popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
+    //                             }
+    //                             if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
+    //                                 console.dir('aa');
+    //                                 popupField +='<p>' + currentFeature.get('Date') + '</p>';
+    //                                 popupField +='<img src="' + currentFeature.get('RelPath') + '" width="200" />';
+    //                                 popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(currentFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
+    //                             } else {
 
-        if(layer === layersList[2].values_.layers.array_[0]　 || layer === layersList[2].values_.layers.array_[1]){ //写真レイヤーのみPopUpに指定
-        //console.dir(layersList[2].values_.layers.array_[1]);
-        if (feature instanceof ol.Feature && (layer.get("interactive") || layer.get("interactive") == undefined)) {
-            var doPopup = false;
-            //各レイヤー　各レイヤーの'fieldImages'の中にHiddenがなければフラグ上げ//
-            //layer.get('fieldImages')[k]  各layerの中のfieldImages[k]取り出し
-            for (k in layer.get('fieldImages')) {
-                if (layer.get('fieldImages')[k] != "Hidden") {
-                    doPopup = true;
-                }
-            }
-            currentFeature = feature;
-            clusteredFeatures = feature.get("features");
-            var clusterFeature;
-            if (typeof clusteredFeatures !== "undefined") {
-                if (doPopup) {
-                    for(var n=0; n<clusteredFeatures.length; n++) {
-                        clusterFeature = clusteredFeatures[n];
-                        currentFeatureKeys = clusterFeature.getKeys();
-                        popupText += '<li><table>'
-                        for (var i=0; i<currentFeatureKeys.length; i++) {
-                            if (currentFeatureKeys[i] != 'geometry') {
-                                popupField = '';
-                                if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
-                                //popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
-                                } else {
-                                    //popupField += '<td colspan="2">';
-                                }
-                                if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
-                                    //popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
-                                }
-                                if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
-                                //    popupField += (clusterFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(clusterFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
-                                } else {
-                                //    popupField += (clusterFeature.get(currentFeatureKeys[i]) != null ? '<img src="images/' + clusterFeature.get(currentFeatureKeys[i]).replace(/[\\\/:]/g, '_').trim()  + '"width="200" /></td>' : '');
-                                }
-                                popupText += '<tr>' + popupField + '</tr>';
-                            }
-                        } 
-                        popupText += '</table></li>';    
-                    }
-                }
-            } else {
-                currentFeatureKeys = currentFeature.getKeys();
-                if (doPopup) {
-                    //popupText += '<li><table>';
-                    for (var i=0; i<currentFeatureKeys.length; i++) {
-                        if (currentFeatureKeys[i] != 'geometry') {
-                            popupField = '';
-                            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
-                                //popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
-                            } else {
-                                //popupField += '<td colspan="2">';
-                            }
-                            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
-                                //popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
-                            }
-                            if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
-                                //popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(currentFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
-                            } else {
-                                //console.log(JSON.stringify(layer));
-                                //console.dir(layer);
-                                //popupField +='<th>' + 'test:' +json_test_8.features[0].geometry.coordinates + '</th>';
-                                popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? '<img src="images/' + currentFeature.get(currentFeatureKeys[i]).replace(/[\\\/:]/g, '_').trim()  + '" width="200" /></td>' : '');
-                            }
-                            popupText += '<tr>' + popupField + '</tr>';
+    //                             }
+    //                             popupText += '<tr>' + popupField + '</tr>';
+    //                         }
+    //                     }
+    //                     //popupText += '</table>';
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }});
+
+        //layersList[2]         //画像のグループレイヤー
+        for(var l in layersList[2].getLayers().getArray()){
+            if(layer === layersList[2].getLayers().getArray()[l]){
+                console.dir(layersList[2].getLayers().getArray()[l]);
+
+                if (feature instanceof ol.Feature && (layer.get("interactive") || layer.get("interactive") == undefined)) {
+                    var doPopup = false;
+                    //各レイヤー　各レイヤーの'fieldImages'の中にHiddenがなければフラグ上げ//
+                    //layer.get('fieldImages')[k]  各layerの中のfieldImages[k]取り出し
+                    for (k in layer.get('fieldImages')) {
+                        if (layer.get('fieldImages')[k] != "Hidden") {
+                            doPopup = true;
                         }
                     }
-                    //popupText += '</table>';
+                    currentFeature = feature;
+                    clusteredFeatures = feature.get("features");
+                    var clusterFeature;
+                    if (typeof clusteredFeatures !== "undefined") {
+
+                    } else {
+                        currentFeatureKeys = currentFeature.getKeys();
+                        if (doPopup) {
+                            //popupText += '<li><table>';
+
+                            // //-----単体ポップアップ　
+                            // console.dir(currentFeature.get('RelPath'));
+                            //console.dir('hai');
+                            popupField +='<p>' + currentFeature.get('Date') + '</p>';
+                            popupField +='<img src="' + currentFeature.get('RelPath') + '" width="200" />';
+                            //console.dir(popupField);
+                            //console.dir(l);
+                            popupText += '<tr>' + popupField + '</tr>';
+                            // //------単体ポップアップ
+                        }
+                    }
                 }
             }
         }
-    }});
-    // if (popupText == '<ul>') {
-    //     popupText = '';
-    // } else {
-    //     popupText += '</ul>';
-    // }
-    //layersList[2]つまり最後に写真のレイヤーが入っている
-    //layersList[2].values_.layers.array_[0]が写真レイヤー
+    });
     
     var viewProjection = map.getView().getProjection();
     var viewResolution = map.getView().getResolution();
