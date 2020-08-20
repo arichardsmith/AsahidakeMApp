@@ -302,7 +302,7 @@ function DisplayPicColum() {
     console.dir('inPicColum');
     
     const visiblePhotos = getVisiblePhotos().reverse(); // 順番は反対
-    console.log(visiblePhotos)
+
     let newHTML = '';
     for (let photoSrc of visiblePhotos) {
         newHTML += imgHTML(photoSrc);
