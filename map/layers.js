@@ -2,7 +2,7 @@ var AsahidakeMap = (function (exports) {
   'use strict';
 
   const baseSource = {
-    url: '/layers/baseMapTiles/{z}/{x}/{y}.png',
+    url: '/layers/baseTiles/{z}/{x}/{y}.png',
     tilePixelRatio: 1
   };
 
@@ -14,7 +14,7 @@ var AsahidakeMap = (function (exports) {
   // const isRetina = window.matchMedia('(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)').matches
 
   const baseTiles = new ol.layer.Tile({
-    source: new ol.source.XYZ(baseSource), //new ol.source.XYZ(isRetina ? retinaSource : baseSource),
+    source: baseSource, //new ol.source.XYZ(isRetina ? retinaSource : baseSource),
     extent: [15890800.0, 5401150.0, 15918700.0, 5426850.0],
     interactive: true
   });
@@ -243,6 +243,8 @@ var AsahidakeMap = (function (exports) {
   connectGeoJSONSource(jpLabelsLayer, labelFeatures);
   connectGeoJSONSource(enLabelsLayer, labelFeatures);
 
+  const LOAD_DEBOUNCE = 200;
+
   function createPointStyle(color = 'rgba(66, 66, 66, 1)') {
     return () => (
       new ol.style.Style({
@@ -348,7 +350,7 @@ var AsahidakeMap = (function (exports) {
     debounceTimeout = setTimeout(() => {
       debounceTimeout = null;
       dispatchLoadEvent();
-    });
+    }, LOAD_DEBOUNCE);
   }
 
   function dispatchLoadEvent() {
