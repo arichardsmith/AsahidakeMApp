@@ -88,9 +88,10 @@ var nakadakeOnsen = ol.proj.fromLonLat([142.84258,43.67512]);
 var markerNakadakeOnsen = ol.proj.fromLonLat([142.861559,43.681867]);
 
 var view = new ol.View({
-     center: asahidake,
-
-     maxZoom: 16, minZoom: 11,
+    center: asahidake,
+    extent: [15890800.0, 5401150.0, 15918700.0, 5426850.0],
+    zoom: 12,
+    maxZoom: 16, minZoom: 11
 });
 
 // レイヤーグループ
