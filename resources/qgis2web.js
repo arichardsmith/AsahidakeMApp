@@ -100,6 +100,13 @@ const photosGroup = new ol.layer.Group({
     layers: AsahidakeMap.photoLayers
 })
 
+// マップの定義前にイベント定義。関数定義は下
+photosGroup.getLayers().forEach(function (layer) {
+    layer.on('change:visible', DisplayPicColum);
+})
+
+AsahidakeMap.onPhotosLoad(DisplayPicColum) // 写真レイヤーロード後
+
 // 登山道グループ
 const trailGroup = new ol.layer.Group({
     title: '登山道',
@@ -263,49 +270,77 @@ onClick('aboutDaisetsuzanGrade',function(){
 //     }
 // }
 
+//memo
+//photosGroup  //画像グループ
+//photosGroup.getLayers().getArray()    //各画像レイヤー
+//layer.getFeatures()    //各Feature
+//feature.getGeometry.getCoordinates() // Featureの場所
+//
 
+//写真レイヤーグループの中のVisible写真
+function getVisiblePhotos () {
+    const visiblePhotoLayers = photosGroup
+        .getLayers()
+        .getArray() // Array変化
+        .filter(layer => layer.getVisible() && layer.getSource() !== null) // VisibleかSourceのあにレイヤー抜く
+    
+    // Loop外関数定義
+    const extractSource = feature => feature.get('src')
+    const visiblePhotos = []
 
+    for (let layer of visiblePhotoLayers) {
+        const layerPhotos = layer
+            .getSource() // Sourceは定義確認は上
+            .getFeatures()
+            .map(extractSource)
+
+        visiblePhotos.push(...layerPhotos)
+    }
+
+    return visiblePhotos
+}
 
 //写真一覧の表示
-var DisplayPicColum = function(){
+var eventAttached = false // 最初だけにクリックイベント付け. var=上に定義
+
+function DisplayPicColum() {
     console.dir('inPicColum');
-    return
-    pic.innerHTML = '';
-    for(var k in layersList[2].getLayers().getArray()){
-        //console.dir(layersList[2].getLayers().getArray()[k].get('fieldImages'));
-        //console.dir(layersList[2].getLayers().getArray()[k]);
-        console.dir(layersList[2].getLayers().getArray()[k].get('source'));
-        if(layersList[2].getLayers().getArray()[k].getVisible() == false)continue;
-        // for(var i in layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_){
-        //     var dir = layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_[i][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
-        //     var ol_uid = i;
-        //     pic.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id="' + ol_uid +  '" alt="test Pic">';
-        //     //console.dir(pic.innerHTML);
-        // }
+    
+    const visiblePhotos = getVisiblePhotos().reverse(); // 順番は反対
+    console.log(visiblePhotos)
+    let newHTML = '';
+    for (let photoSrc of visiblePhotos) {
+        newHTML += imgHTML(photoSrc);
     }
-    //---event 処理
-    // for(var k in layersList[2].values_.layers.array_){
-    //     if(layersList[2].values_.layers.array_[k].getVisible() == false)continue;
-    //     for(var i in layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_){
-    //         var ol_uid = i;
-    //         onClick(ol_uid,pictureOnClick(k,ol_uid));
-    //     }
-    // }
-    //---
+
+    const picColumn = document.getElementById('pic');
+
+    if (!eventAttached) {
+      picColumn.addEventListener('click', handlePhotoClick);
+      eventAttached = true
+    }
+
+    picColumn.innerHTML = newHTML;
 }
-//最初の表示
-     DisplayPicColum();
 
+//写真一覧クリック処理用
+function handlePhotoClick(e) {
+    const targetElement = e.target
+    if (!(targetElement instanceof HTMLImageElement)) {
+        // Only match clicks on img elements
+        return
+    }
 
-//memo
-//layersList[2]  //画像グループ
-//layersList[2].values_.layers.array_     //各画像レイヤー
-//layersList[2].values_.layers.array_[1].values_.source.featureChangeKeys_[ よくわからん ][0] // 各画像の場所
-//
-//jsonSource_test_8.featureChangeKeys_[4529][0].target.values_.Path         //Pathの場所
-//layersList[2].values_.layers.array_[1].values_.source.featureChangeKeys_[4513][0].target.values_.Path   ///上に同じ
-//
+    const imgSource = new URL(targetElement.src).pathname // Extract path
+    const point = AsahidakeMap.photoLocations.get(imgSource)
+    
+    showPopup(imgSource, point)
+}
 
+//写真HTML Template
+function imgHTML(src) {
+    return `<img class="fit-picture" src="images/MapPics/${src}" alt="test Pic" />`
+}
 
 //layerSwitcher の制作
 var layerSwitcher = new ol.control.LayerSwitcher({tipLabel: "Layers"});

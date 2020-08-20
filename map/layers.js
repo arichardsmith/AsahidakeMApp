@@ -244,6 +244,7 @@ var AsahidakeMap = (function (exports) {
   connectGeoJSONSource(enLabelsLayer, labelFeatures);
 
   const LOAD_DEBOUNCE = 200;
+  const PHOTO_ROOT = '/images/MapPics/';
 
   function createPointStyle(color = 'rgba(66, 66, 66, 1)') {
     return () => (
@@ -327,7 +328,7 @@ var AsahidakeMap = (function (exports) {
       const geom = feat.getGeometry();
 
       const coords = geom instanceof ol.geom.Point ? geom.getCoordinates() : undefined;
-      photoLocations.set(`/${src}`, coords); // There needs to be a / prepended for the source lookup
+      photoLocations.set(PHOTO_ROOT + src, coords); // There needs to be a / prepended for the source lookup
     }
   }
 

@@ -288,7 +288,7 @@ function DisplayPicColum() {
     console.dir('inPicColum');
     
     const visiblePhotos = getVisiblePhotos().reverse(); // 順番は反対
-    
+    console.log(visiblePhotos)
     let newHTML = '';
     for (let photoSrc of visiblePhotos) {
         newHTML += imgHTML(photoSrc);
@@ -320,7 +320,7 @@ function handlePhotoClick(e) {
 
 //写真HTML Template
 function imgHTML(src) {
-    return `<img class="fit-picture" src="${src}" alt="test Pic" />`
+    return `<img class="fit-picture" src="/images/MapPics/${src}" alt="test Pic" />`
 }
 
 var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
