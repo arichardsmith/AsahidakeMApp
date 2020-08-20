@@ -74,6 +74,27 @@ var view = new ol.View({
      maxZoom: 16, minZoom: 11,
 });
 
+// レイヤーグループ
+const photosGroup = new ol.layer.Group({
+    title: '写真',
+    layers: AsahidakeMap.photoLayers
+})
+
+// 登山道グループ
+const trailGroup = new ol.layer.Group({
+    title: '登山道',
+    layers: AsahidakeMap.trailLayers
+})
+
+// 客レイヤー
+const layersList = [
+    AsahidakeMap.baseTiles,
+    AsahidakeMap.jpLabelsLayer,
+    AsahidakeMap.enLabelsLayer,
+    trailGroup,
+    photosGroup
+]
+
 //---マップの定義
 var map = new ol.Map({
     controls: ol.control.defaults({attribution:false}).extend([
@@ -228,6 +249,7 @@ onClick('aboutDaisetsuzanGrade',function(){
 //写真一覧の表示
 var DisplayPicColum = function(){
     console.dir('inPicColum');
+    return
     pic.innerHTML = '';
     for(var k in layersList[2].getLayers().getArray()){
         //console.dir(layersList[2].getLayers().getArray()[k].get('fieldImages'));
