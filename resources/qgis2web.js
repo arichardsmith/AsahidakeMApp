@@ -41,20 +41,39 @@ const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
 
-var sketch;
+/**
+ * ポップアップ表示
+ * @param {*} imgSrcs - 表示写真source 
+ * @param {*} coords - Pointの場所
+ */
+function showPopup(imgSrcs, coords) {
+    if (!Array.isArray(imgSrcs)) {
+        // 一つなら、Arrayに変化
+        imgSrcs = [imgSrcs];
+    }
 
-//ポップアップ処理
-closer.onclick = function() {
+    const imgHtml = imgSrcs
+        .map(imgHTML) // HTML String変化
+        .join('');
+    
+    content.innerHTML = imgHtml;
+    overlayPopup.setPosition(coords);
+    overlayPopup.panIntoView({
+        margin: 20
+    })
+    container.style.display = 'block';
+}
+
+function hidePopup() {
     container.style.display = 'none';
     closer.blur();
     return false;
-};
+}
+
+closer.addEventListener('click', hidePopup)
+
 const overlayPopup = new ol.Overlay({
-    element: container,
-    autoPan: true,
-    autoPanAnimation: {
-        duration: 250
-    }
+    element: container
 });
 
 var expandedAttribution = new ol.control.Attribution({
