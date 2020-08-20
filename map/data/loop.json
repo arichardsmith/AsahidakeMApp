@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","name":"summit","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"src":"DSC02154.jpg"},"geometry":{"type":"Point","coordinates":[142.87264444444446,43.672066666666666]}}]}

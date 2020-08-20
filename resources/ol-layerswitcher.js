@@ -79,6 +79,14 @@ var inherits = function (subClass, superClass) {
 
 
 
+
+
+
+
+
+
+
+
 var possibleConstructorReturn = function (self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -99,6 +107,7 @@ var CSS_PREFIX = 'layer-switcher-';
  * @param {String} opt_options.groupSelectStyle either `'none'` - groups don't get a checkbox,
  *   `'children'` (default) groups have a checkbox and affect child visibility or
  *   `'group'` groups have a checkbox but do not alter child visibility (like QGIS).
+ * @param {boolean} opt_options.reverse Reverse the layer order. Defaults to true.
  */
 
 var LayerSwitcher = function (_Control) {
@@ -118,6 +127,8 @@ var LayerSwitcher = function (_Control) {
 
         _this.groupSelectStyle = LayerSwitcher.getGroupSelectStyle(options.groupSelectStyle);
 
+        _this.reverse = options.reverse !== false;
+
         _this.mapListeners = [];
 
         _this.hiddenClassName = 'ol-unselectable ol-control layer-switcher';
@@ -127,8 +138,6 @@ var LayerSwitcher = function (_Control) {
         _this.shownClassName = 'shown';
 
         element.className = _this.hiddenClassName;
-        //test
-        //element.id = 'layers-switcher';
 
         var button = document.createElement('button');
         button.setAttribute('title', tipLabel);
@@ -136,7 +145,6 @@ var LayerSwitcher = function (_Control) {
 
         _this.panel = document.createElement('div');
         _this.panel.className = 'panel';
-        _this.panel.id= 'layers-switcher-panel';
         element.appendChild(_this.panel);
         LayerSwitcher.enableTouchScroll_(_this.panel);
 
@@ -220,7 +228,7 @@ var LayerSwitcher = function (_Control) {
         key: 'renderPanel',
         value: function renderPanel() {
             this.dispatchEvent({ type: 'render' });
-            LayerSwitcher.renderPanel(this.getMap(), this.panel, { groupSelectStyle: this.groupSelectStyle });
+            LayerSwitcher.renderPanel(this.getMap(), this.panel, { groupSelectStyle: this.groupSelectStyle, reverse: this.reverse });
             this.dispatchEvent({ type: 'rendercomplete' });
         }
 
@@ -396,7 +404,6 @@ var LayerSwitcher = function (_Control) {
                     LayerSwitcher.setVisible_(map, l, lyr.getVisible(), groupSelectStyle);
                 });
             }
-            DisplayPicColum();
         }
 
         /**
@@ -434,7 +441,9 @@ var LayerSwitcher = function (_Control) {
                     li.classList.add(CSS_PREFIX + lyr.get('fold'));
                     var btn = document.createElement('button');
                     btn.onclick = function (e) {
+                        e = e || window.event;
                         LayerSwitcher.toggleFold_(lyr, li);
+                        e.preventDefault();
                     };
                     li.appendChild(btn);
                 }
@@ -503,7 +512,8 @@ var LayerSwitcher = function (_Control) {
     }, {
         key: 'renderLayers_',
         value: function renderLayers_(map, lyr, elm, options, render) {
-            var lyrs = lyr.getLayers().getArray().slice().reverse();
+            var lyrs = lyr.getLayers().getArray().slice();
+            if (options.reverse) lyrs = lyrs.reverse();
             for (var i = 0, l; i < lyrs.length; i++) {
                 l = lyrs[i];
                 if (l.get('title')) {

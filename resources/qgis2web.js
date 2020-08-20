@@ -41,24 +41,39 @@ const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
 
-var sketch;
+/**
+ * ポップアップ表示
+ * @param {*} imgSrcs - 表示写真source 
+ * @param {*} coords - Pointの場所
+ */
+function showPopup(imgSrcs, coords) {
+    if (!Array.isArray(imgSrcs)) {
+        // 一つなら、Arrayに変化
+        imgSrcs = [imgSrcs];
+    }
 
-//ポップアップ処理
-closer.onclick = function() {
+    const imgHtml = imgSrcs
+        .map(imgHTML) // HTML String変化
+        .join('');
+    
+    content.innerHTML = imgHtml;
+    overlayPopup.setPosition(coords);
+    overlayPopup.panIntoView({
+        margin: 20
+    })
+    container.style.display = 'block';
+}
+
+function hidePopup() {
     container.style.display = 'none';
     closer.blur();
     return false;
-};
-const overlayPopup = new ol.Overlay({
-    element: container,
-    autoPan: true,
-    autoPanAnimation: {
-        duration: 250
-    }
-});
+}
 
-var expandedAttribution = new ol.control.Attribution({
-    collapsible: false
+closer.addEventListener('click', hidePopup)
+
+const overlayPopup = new ol.Overlay({
+    element: container
 });
 
 
@@ -69,15 +84,46 @@ var nakadakeOnsen = ol.proj.fromLonLat([142.84258,43.67512]);
 var markerNakadakeOnsen = ol.proj.fromLonLat([142.861559,43.681867]);
 
 var view = new ol.View({
-     center: asahidake,
-
-     maxZoom: 16, minZoom: 11,
+    center: asahidake,
+    extent: [15890800.0, 5401150.0, 15918700.0, 5426850.0],
+    zoom: 12,
+    maxZoom: 16, minZoom: 11
 });
+
+// レイヤーグループ
+const photosGroup = new ol.layer.Group({
+    title: '写真',
+    layers: AsahidakeMap.photoLayers
+})
+
+// マップの定義前にイベント定義。関数定義は下
+photosGroup.getLayers().forEach(function (layer) {
+    layer.on('change:visible', DisplayPicColum);
+})
+
+AsahidakeMap.onPhotosLoad(DisplayPicColum) // 写真レイヤーロード後
+
+// 登山道グループ
+const trailGroup = new ol.layer.Group({
+    title: '登山道',
+    layers: AsahidakeMap.trailLayers
+})
+
+// 客レイヤー
+const layersList = [
+    AsahidakeMap.baseTiles,
+    AsahidakeMap.jpLabelsLayer,
+    AsahidakeMap.enLabelsLayer,
+    trailGroup,
+    photosGroup
+]
 
 //---マップの定義
 var map = new ol.Map({
-    controls: ol.control.defaults({attribution:false}).extend([
-        expandedAttribution,new geolocateControl(),
+    controls: ol.control.defaults().extend([
+        new geolocateControl(),
+        new ol.control.ScaleLine(), //---スケールラインの設定
+        new ol.control.LayerSwitcher({tipLabel: "Layers"}) //layerSwitcher の制作
     ]),
     target: document.getElementById('map'),
     renderer: 'canvas',
@@ -86,9 +132,6 @@ var map = new ol.Map({
     loadTilesWhileAnimating: true,
     view:view
 });
-//---スケールラインの設定
-var scaleLine = new ol.control.ScaleLine();
-map.addControl(scaleLine);
 
 // //中岳温泉のポップアップの定義------
 // // Iconオブジェクト設定
@@ -163,451 +206,164 @@ function onClick(id, callback) {
 onClick('aboutAsahidake', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
- //   scrollTo(0,0);
-    toColumn.innerHTML='大雪山について 読む'
-    $(function(){
-        $("#column").load("aboutDaisetsuzan.html");
-        $("html,body").animate({scrollTop:position},600);
-    });
+    $("#column").load("aboutDaisetsuzan.html");
+    $("html,body").animate({scrollTop:position},600);
 });
 
 onClick('aboutSugatami', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
-    toColumn.innerHTML='姿見園地について 読む'
-    $(function(){
-        $("#column").load("aboutSugatami.html");
-    });
+    $("#column").load("aboutSugatami.html");
 });
 
 onClick('aboutTrailToPeak',function(){
     view.setCenter(asahidake);
     view.setZoom(15);
-    toColumn.innerHTML='旭岳山頂ルートについて 読む'
-    $(function(){
-        $("#column").load("aboutTrailToPeak.html");
-    });
+    $("#column").load("aboutTrailToPeak.html");
 });
 
 onClick('about6hLoop',function(){
     view.setCenter(nakadakeOnsen);
     view.setZoom(14);
-    toColumn.innerHTML='一日周回コースについて 読む'
-    $(function(){
-        $("#column").load("about6hLoop.html");
-    });
+    $("#column").load("about6hLoop.html");
 
-    //ポップアップ "中岳温泉"
-    // content.innerHTML = '<p>中岳温泉</p>'
-    // overlayPopup.setPosition(markerNakadakeOnsen);
-    // container.style.display = 'block'; 
 });
 
-onClick('trail_Info',function(){
-    toColumn.innerHTML='各種情報 読む';
-    $(function(){
-        $("#column").load("trail_Info.html");
-        $("html,body").animate({scrollTop:position},600);
-    });
+onClick('info',function(){
+    $("#column").load("info.html");
+    $("html,body").animate({scrollTop:position},600);
+
+});
+
+onClick('aboutDaisetsuzanGrade',function(){
+    $("#column").load("aboutDaisetsuzanGrade.html");
 });
 
 
 
-//写真レイヤーグループの中にVisibleがあるか
-var isAnyPicVisible = function(){
-    for(var k in layersList[2].values_.layers.array_){
-        if(layersList[2].values_.layers.array_[k].getVisible()){
-            return true;
-        }
-    }
-    return false;
-}
+// //写真レイヤーグループの中にVisibleがあるか
+// var isAnyPicVisible = function(){
+//     for(var k in layersList[2].values_.layers.array_){
+//         if(layersList[2].values_.layers.array_[k].getVisible()){
+//             return true;
+//         }
+//     }
+//     return false;
+// }
 
-//写真一覧クリック処理用
- var pictureOnClick =  function(layer,id){
-    return function(){
-        console.dir('pictureOnClick');
-        content.innerHTML='';
-        //content.innerHTML = '<p>' + 'test' + '</P>' ;
-        var dir = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
-        content.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id=' + id + ' alt="test Pic">'
-        var point = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.geometry.flatCoordinates;
-        overlayPopup.setPosition(point);
-        container.style.display = 'block';
+// //写真一覧クリック処理用
+//  var pictureOnClick =  function(layer,id){
+//     return function(){
+//         console.dir('pictureOnClick');
+//         content.innerHTML='';
+//         //content.innerHTML = '<p>' + 'test' + '</P>' ;
+//         var dir = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
+//         content.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id=' + id + ' alt="test Pic">'
+//         var point = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.geometry.flatCoordinates;
+//         overlayPopup.setPosition(point);
+//         container.style.display = 'block';
+//     }
+// }
+
+//memo
+//photosGroup  //画像グループ
+//photosGroup.getLayers().getArray()    //各画像レイヤー
+//layer.getFeatures()    //各Feature
+//feature.getGeometry.getCoordinates() // Featureの場所
+//
+
+//写真レイヤーグループの中のVisible写真
+function getVisiblePhotos () {
+    const visiblePhotoLayers = photosGroup
+        .getLayers()
+        .getArray() // Array変化
+        .filter(layer => layer.getVisible() && layer.getSource() !== null) // VisibleかSourceのあにレイヤー抜く
+    
+    // Loop外関数定義
+    const extractSource = feature => feature.get('src')
+    const visiblePhotos = []
+
+    for (let layer of visiblePhotoLayers) {
+        const layerPhotos = layer
+            .getSource() // Sourceは定義確認は上
+            .getFeatures()
+            .map(extractSource)
+
+        visiblePhotos.push(...layerPhotos)
     }
+
+    return visiblePhotos
 }
 
 //写真一覧の表示
-var DisplayPicColum = function(){
+var eventAttached = false // 最初だけにクリックイベント付け. var=上に定義
+
+function DisplayPicColum() {
     console.dir('inPicColum');
-    pic.innerHTML = '';
-    for(var k in layersList[2].values_.layers.array_){
-       
-        if(layersList[2].values_.layers.array_[k].getVisible() == false)continue;
-        for(var i in layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_){
-            var dir = layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_[i][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
-            var ol_uid = i;
-            pic.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id="' + ol_uid +  '" alt="test Pic">';
-            //console.dir(pic.innerHTML);
-        }
-    }
-    //---event 処理
-    for(var k in layersList[2].values_.layers.array_){
-        if(layersList[2].values_.layers.array_[k].getVisible() == false)continue;
-        for(var i in layersList[2].values_.layers.array_[k].values_.source.featureChangeKeys_){
-            var ol_uid = i;
-            onClick(ol_uid,pictureOnClick(k,ol_uid));
-        }
-    }
-    //---
-}
-//最初の表示
-DisplayPicColum();
-
-
-//memo
-//layersList[2]  //画像グループ
-//layersList[2].values_.layers.array_     //各画像レイヤー
-//layersList[2].values_.layers.array_[1].values_.source.featureChangeKeys_[ よくわからん ][0] // 各画像の場所
-//
-//jsonSource_test_8.featureChangeKeys_[4529][0].target.values_.Path         //Pathの場所
-//layersList[2].values_.layers.array_[1].values_.source.featureChangeKeys_[4513][0].target.values_.Path   ///上に同じ
-//
-
-
-//layerSwitcher の制作
-var layerSwitcher = new ol.control.LayerSwitcher({tipLabel: "Layers"});
-map.addControl(layerSwitcher);
-
-map.getView().fit([15897862.879900, 5411688.868681, 15905044.845058, 5417318.640126], map.getSize());
-
-var NO_POPUP = 0
-var ALL_FIELDS = 1
-
-/**
- * Returns either NO_POPUP, ALL_FIELDS or the name of a single field to use for
- * a given layer
- * @param layerList {Array} List of ol.Layer instances
- * @param layer {ol.Layer} Layer to find field info about
- */
-function getPopupFields(layerList, layer) {
-    // Determine the index that the layer will have in the popupLayers Array,
-    // if the layersList contains more items than popupLayers then we need to
-    // adjust the index to take into account the base maps group
-    var idx = layersList.indexOf(layer) - (layersList.length - popupLayers.length);
-    return popupLayers[idx];
-}
-
-
-var collection = new ol.Collection();
-var featureOverlay = new ol.layer.Vector({
-    map: map,
-    source: new ol.source.Vector({
-        features: collection,
-        useSpatialIndex: false // optional, might improve performance
-    }),
-    style: [new ol.style.Style({
-        stroke: new ol.style.Stroke({
-            color: '#f00',
-            width: 1
-        }),
-        fill: new ol.style.Fill({
-            color: 'rgba(255,0,0,0.1)'
-        }),
-    })],
-    updateWhileAnimating: true, // optional, for instant visual feedback
-    updateWhileInteracting: true // optional, for instant visual feedback
-});
-
-var doHighlight = false;
-var doHover = false;
-
-var highlight;
-var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
-
-//---マウスポインター動かしたときの処理
-var onPointerMove = function(evt) {
-    if (!doHover && !doHighlight) {
-        return;
-    }
-    var pixel = map.getEventPixel(evt.originalEvent);
-    var coord = evt.coordinate;
-    var popupField;
-    var currentFeature;
-    var currentLayer;
-    var currentFeatureKeys;
-    var clusteredFeatures;
-    var popupText = '<ul>';
-    map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-        // We only care about features from layers in the layersList, ignore
-        // any other layers which the map might contain such as the vector
-        // layer used by the measure tool
-        if (layersList.indexOf(layer) === -1) {
-            return;
-        }
-        var doPopup = false;
-        for (k in layer.get('fieldImages')) {
-            if (layer.get('fieldImages')[k] != "Hidden") {
-                doPopup = true;
-            }
-        }
-        currentFeature = feature;
-        currentLayer = layer;
-        clusteredFeatures = feature.get("features");
-        var clusterFeature;
-        if (typeof clusteredFeatures !== "undefined") {
-            if (doPopup) {
-                for(var n=0; n<clusteredFeatures.length; n++) {
-                    clusterFeature = clusteredFeatures[n];
-                    currentFeatureKeys = clusterFeature.getKeys();
-                    popupText += '<li><table>'
-                    for (var i=0; i<currentFeatureKeys.length; i++) {
-                        if (currentFeatureKeys[i] != 'geometry') {
-                            popupField = '';
-                            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
-                                popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
-                            } else {
-                                popupField += '<td colspan="2">';
-                            }
-                            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
-                                popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
-                            }
-                            if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
-                                popupField += (clusterFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(clusterFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
-                            } else {
-                                popupField += (clusterFeature.get(currentFeatureKeys[i]) != null ? '<img src="images/' + clusterFeature.get(currentFeatureKeys[i]).replace(/[\\\/:]/g, '_').trim()  + '" /></td>' : '');
-                            }
-                            popupText += '<tr>' + popupField + '</tr>';
-                        }
-                    } 
-                    popupText += '</table></li>';    
-                }
-            }
-        } else {
-            currentFeatureKeys = currentFeature.getKeys();
-            if (doPopup) {
-                popupText += '<li><table>';
-                for (var i=0; i<currentFeatureKeys.length; i++) {
-                    if (currentFeatureKeys[i] != 'geometry') {
-                        popupField = '';
-                        if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
-                        //    popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
-                        } else {
-                        //    popupField += '<td colspan="2">';
-                        }
-                        if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
-                        //    popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
-                        }
-                        if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
-                        //    popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(currentFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
-                        } else {
-                        //    popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? '<img src="images/' + currentFeature.get(currentFeatureKeys[i]).replace(/[\\\/:]/g, '_').trim()  + '" /></td>' : '');
-                        }
-                        popupText += '<tr>' + popupField + '</tr>';
-                    }
-                }
-                popupText += '</table></li>';
-            }
-        }
-    });
-    if (popupText == '<ul>') {
-        popupText = '';
-    } else {
-        popupText += '</ul>';
-    }
-
-    if (doHighlight) {
-        if (currentFeature !== highlight) {
-            if (highlight) {
-                featureOverlay.getSource().removeFeature(highlight);
-            }
-            if (currentFeature) {
-                var styleDefinition = currentLayer.getStyle().toString();
-
-                if (currentFeature.getGeometry().getType() == 'Point') {
-                    var radius = styleDefinition.split('radius')[1].split(' ')[1];
-
-                    highlightStyle = new ol.style.Style({
-                        image: new ol.style.Circle({
-                            fill: new ol.style.Fill({
-                                color: "#ffff00"
-                            }),
-                            radius: radius
-                        })
-                    })
-                } else if (currentFeature.getGeometry().getType() == 'LineString') {
-
-                    var featureWidth = styleDefinition.split('width')[1].split(' ')[1].replace('})','');
-
-                    highlightStyle = new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: '#ffff00',
-                            lineDash: null,
-                            width: featureWidth
-                        })
-                    });
-
-                } else {
-                    highlightStyle = new ol.style.Style({
-                        fill: new ol.style.Fill({
-                            color: '#ffff00'
-                        })
-                    })
-                }
-                featureOverlay.getSource().addFeature(currentFeature);
-                featureOverlay.setStyle(highlightStyle);
-            }
-            highlight = currentFeature;
-        }
-    }
-
-    if (doHover) {
-        if (popupText) {
-            overlayPopup.setPosition(coord);
-            content.innerHTML = popupText;
-            container.style.display = 'block';        
-        } else {
-            container.style.display = 'none';
-            closer.blur();
-        }
-    }
-};
-
-
-//TryDoNotPopUpText onSingleClick
-var onSingleClick = function(evt) {
-    if (doHover) {
-        return;
-    }
-    if (sketch) {
-        return;
-    }
-    var pixel = map.getEventPixel(evt.originalEvent);
-    var coord = evt.coordinate;
-    var popupField;
-    var currentFeature;
-    var currentFeatureKeys;
-    var clusteredFeatures;
-    //var popupText = '<ul>';
-    var popupText = '';
-
-    map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-
-        if(layer === layersList[2].values_.layers.array_[0]　 || layer === layersList[2].values_.layers.array_[1]){ //写真レイヤーのみPopUpに指定
-        //console.dir(layersList[2].values_.layers.array_[1]);
-        if (feature instanceof ol.Feature && (layer.get("interactive") || layer.get("interactive") == undefined)) {
-            var doPopup = false;
-            //各レイヤー　各レイヤーの'fieldImages'の中にHiddenがなければフラグ上げ//
-            //layer.get('fieldImages')[k]  各layerの中のfieldImages[k]取り出し
-            for (k in layer.get('fieldImages')) {
-                if (layer.get('fieldImages')[k] != "Hidden") {
-                    doPopup = true;
-                }
-            }
-            currentFeature = feature;
-            clusteredFeatures = feature.get("features");
-            var clusterFeature;
-            if (typeof clusteredFeatures !== "undefined") {
-                if (doPopup) {
-                    for(var n=0; n<clusteredFeatures.length; n++) {
-                        clusterFeature = clusteredFeatures[n];
-                        currentFeatureKeys = clusterFeature.getKeys();
-                        popupText += '<li><table>'
-                        for (var i=0; i<currentFeatureKeys.length; i++) {
-                            if (currentFeatureKeys[i] != 'geometry') {
-                                popupField = '';
-                                if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
-                                //popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
-                                } else {
-                                    //popupField += '<td colspan="2">';
-                                }
-                                if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
-                                    //popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
-                                }
-                                if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
-                                //    popupField += (clusterFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(clusterFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
-                                } else {
-                                //    popupField += (clusterFeature.get(currentFeatureKeys[i]) != null ? '<img src="images/' + clusterFeature.get(currentFeatureKeys[i]).replace(/[\\\/:]/g, '_').trim()  + '"width="200" /></td>' : '');
-                                }
-                                popupText += '<tr>' + popupField + '</tr>';
-                            }
-                        } 
-                        popupText += '</table></li>';    
-                    }
-                }
-            } else {
-                currentFeatureKeys = currentFeature.getKeys();
-                if (doPopup) {
-                    //popupText += '<li><table>';
-                    for (var i=0; i<currentFeatureKeys.length; i++) {
-                        if (currentFeatureKeys[i] != 'geometry') {
-                            popupField = '';
-                            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
-                                //popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
-                            } else {
-                                //popupField += '<td colspan="2">';
-                            }
-                            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
-                                //popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
-                            }
-                            if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
-                                //popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(currentFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
-                            } else {
-                                //console.log(JSON.stringify(layer));
-                                //console.dir(layer);
-                                //popupField +='<th>' + 'test:' +json_test_8.features[0].geometry.coordinates + '</th>';
-                                popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? '<img src="images/' + currentFeature.get(currentFeatureKeys[i]).replace(/[\\\/:]/g, '_').trim()  + '" width="200" /></td>' : '');
-                            }
-                            popupText += '<tr>' + popupField + '</tr>';
-                        }
-                    }
-                    //popupText += '</table>';
-                }
-            }
-        }
-    }});
-    // if (popupText == '<ul>') {
-    //     popupText = '';
-    // } else {
-    //     popupText += '</ul>';
-    // }
-    //layersList[2]つまり最後に写真のレイヤーが入っている
-    //layersList[2].values_.layers.array_[0]が写真レイヤー
     
-    var viewProjection = map.getView().getProjection();
-    var viewResolution = map.getView().getResolution();
-    for (i = 0; i < wms_layers.length; i++) {
-        if (wms_layers[i][1]) {
-            var url = wms_layers[i][0].getSource().getGetFeatureInfoUrl(
-                evt.coordinate, viewResolution, viewProjection,
-                {
-                    'INFO_FORMAT': 'text/html',
-                });
-            if (url) {
-                popupText = popupText + '<iframe style="width:100%;height:110px;border:0px;" id="iframe" seamless src="' + url + '"></iframe>';
-            }
+    const visiblePhotos = getVisiblePhotos().reverse(); // 順番は反対
+
+    let newHTML = '';
+    for (let photoSrc of visiblePhotos) {
+        newHTML += imgHTML(`images/MapPics/${photoSrc}`);
+    }
+
+    const picColumn = document.getElementById('pic');
+
+    if (!eventAttached) {
+      picColumn.addEventListener('click', handlePhotoClick);
+      eventAttached = true
+    }
+
+    picColumn.innerHTML = newHTML;
+}
+
+//写真一覧クリック処理用
+function handlePhotoClick(e) {
+    const targetElement = e.target
+    if (!(targetElement instanceof HTMLImageElement)) {
+        // Only match clicks on img elements
+        return
+    }
+
+    const imgSource = new URL(targetElement.src).pathname // Extract path
+    const point = AsahidakeMap.photoLocations.get(imgSource)
+    
+    showPopup(imgSource, point)
+}
+
+//写真HTML Template
+function imgHTML(src) {
+    return `<img class="fit-picture" src="${src}" alt="test Pic" />`
+}
+
+//マップクリックイベント
+function handleMapPointer(evt) {
+    const pixel = evt.pixel;
+    const coord = evt.coordinate;
+    const photoLayers = photosGroup.getLayers().getArray();
+
+    const imgs = []
+    map.forEachFeatureAtPixel(pixel, (feature, layer) => {
+        if (photoLayers.includes(layer)) {
+            // 写真レイヤーの場合
+            const imgSrc = feature.get('src');
+            imgs.push(imgSrc);
         }
+    })
+
+    const filteredImages = imgs
+        .filter(img => img !== undefined) // srcのないのを抜く
+        .map(img => `images/MapPics/${img}`); // Path付け
+
+    if (filteredImages.length > 0) {
+        // クリックした写真Pointある
+        showPopup(filteredImages, coord);
     }
+}
 
-    if (popupText) {
-        overlayPopup.setPosition(coord);
-        content.innerHTML = popupText;
-        container.style.display = 'block';        
-    } else {
-        container.style.display = 'none';
-        closer.blur();
-    }
-};
-
-
-map.on('pointermove', function(evt) {
-    onPointerMove(evt);
-});
-map.on('singleclick', function(evt) {
-    onSingleClick(evt);
-});
-
-
+// マウスポインター動の場合は'click'の代わりに'pointermove'
+map.on('click', handleMapPointer);
 
 var geolocation = new ol.Geolocation({
   projection: map.getView().getProjection()
@@ -646,26 +402,6 @@ var geolocateOverlay = new ol.layer.Vector({
 });
 
 geolocation.setTracking(true);
-
-
-var attributionComplete = false;
-map.on("rendercomplete", function(evt) {
-    if (!attributionComplete) {
-        var attribution = document.getElementsByClassName('ol-attribution')[0];
-        var attributionList = attribution.getElementsByTagName('ul')[0];
-        var firstLayerAttribution = attributionList.getElementsByTagName('li')[0];
-        var qgis2webAttribution = document.createElement('li');
-        qgis2webAttribution.innerHTML = '<a href="https://github.com/tomchadwin/qgis2web">qgis2web</a> &middot; ';
-        var olAttribution = document.createElement('li');
-        olAttribution.innerHTML = '<a href="https://openlayers.org/">OpenLayers</a> &middot; ';
-        var qgisAttribution = document.createElement('li');
-        qgisAttribution.innerHTML = '<a href="https://qgis.org/">QGIS</a>';
-        attributionList.insertBefore(qgis2webAttribution, firstLayerAttribution);
-        attributionList.insertBefore(olAttribution, firstLayerAttribution);
-        attributionList.insertBefore(qgisAttribution, firstLayerAttribution);
-        attributionComplete = true;
-    }
-})
 
 // var scrollPoint = document.getElementById('column'); // 移動させたい位置の要素を取得
 // var rect = scrollPoint.getBoundingClientRect();
