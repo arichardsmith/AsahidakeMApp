@@ -76,10 +76,6 @@ const overlayPopup = new ol.Overlay({
     element: container
 });
 
-var expandedAttribution = new ol.control.Attribution({
-    collapsible: false
-});
-
 
 //---座標定義---------------------------------
 var sugatami = ol.proj.fromLonLat([142.82877,43.66210]);
@@ -367,8 +363,6 @@ function handleMapPointer(evt) {
 // マウスポインター動の場合は'click'の代わりに'pointermove'
 map.on('click', handleMapPointer);
 
-map.getView().fit([15897862.879900, 5411688.868681, 15905044.845058, 5417318.640126], map.getSize());
-
 var geolocation = new ol.Geolocation({
   projection: map.getView().getProjection()
 });
@@ -406,26 +400,6 @@ var geolocateOverlay = new ol.layer.Vector({
 });
 
 geolocation.setTracking(true);
-
-
-var attributionComplete = false;
-map.on("rendercomplete", function(evt) {
-    if (!attributionComplete) {
-        var attribution = document.getElementsByClassName('ol-attribution')[0];
-        var attributionList = attribution.getElementsByTagName('ul')[0];
-        var firstLayerAttribution = attributionList.getElementsByTagName('li')[0];
-        var qgis2webAttribution = document.createElement('li');
-        qgis2webAttribution.innerHTML = '<a href="https://github.com/tomchadwin/qgis2web">qgis2web</a> &middot; ';
-        var olAttribution = document.createElement('li');
-        olAttribution.innerHTML = '<a href="https://openlayers.org/">OpenLayers</a> &middot; ';
-        var qgisAttribution = document.createElement('li');
-        qgisAttribution.innerHTML = '<a href="https://qgis.org/">QGIS</a>';
-        attributionList.insertBefore(qgis2webAttribution, firstLayerAttribution);
-        attributionList.insertBefore(olAttribution, firstLayerAttribution);
-        attributionList.insertBefore(qgisAttribution, firstLayerAttribution);
-        attributionComplete = true;
-    }
-})
 
 // var scrollPoint = document.getElementById('column'); // 移動させたい位置の要素を取得
 // var rect = scrollPoint.getBoundingClientRect();
