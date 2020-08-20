@@ -124,8 +124,10 @@ const layersList = [
 
 //---マップの定義
 var map = new ol.Map({
-    controls: ol.control.defaults({attribution:false}).extend([
-        expandedAttribution,new geolocateControl(),
+    controls: ol.control.defaults().extend([
+        new geolocateControl(),
+        new ol.control.ScaleLine(), //---スケールラインの設定
+        new ol.control.LayerSwitcher({tipLabel: "Layers"}) //layerSwitcher の制作
     ]),
     target: document.getElementById('map'),
     renderer: 'canvas',
@@ -134,9 +136,6 @@ var map = new ol.Map({
     loadTilesWhileAnimating: true,
     view:view
 });
-//---スケールラインの設定
-var scaleLine = new ol.control.ScaleLine();
-map.addControl(scaleLine);
 
 // //中岳温泉のポップアップの定義------
 // // Iconオブジェクト設定
@@ -367,10 +366,6 @@ function handleMapPointer(evt) {
 
 // マウスポインター動の場合は'click'の代わりに'pointermove'
 map.on('click', handleMapPointer);
-
-//layerSwitcher の制作
-var layerSwitcher = new ol.control.LayerSwitcher({tipLabel: "Layers"});
-map.addControl(layerSwitcher);
 
 map.getView().fit([15897862.879900, 5411688.868681, 15905044.845058, 5417318.640126], map.getSize());
 
