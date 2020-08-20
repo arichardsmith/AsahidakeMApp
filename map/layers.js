@@ -2,19 +2,19 @@ var AsahidakeMap = (function (exports) {
   'use strict';
 
   const baseSource = {
-    url: '/layers/baseMapTiles/{z}/{x}/{y}.png',
+    url: '/map/tiles/{z}/{x}/{y}.png',
     tilePixelRatio: 1
   };
 
-  /*const retinaSource = {
+  const retinaSource = {
     url: '/map/tiles/2x/{z}/{x}/{y}.png',
     tilePixelRatio: 2
-  }*/
+  };
 
-  // const isRetina = window.matchMedia('(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)').matches
+  const isRetina = window.matchMedia('(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)').matches;
 
   const baseTiles = new ol.layer.Tile({
-    source: new ol.source.XYZ(baseSource), //new ol.source.XYZ(isRetina ? retinaSource : baseSource),
+    source: new ol.source.XYZ(isRetina ? retinaSource : baseSource),
     extent: [15890800.0, 5401150.0, 15918700.0, 5426850.0],
     interactive: true
   });
