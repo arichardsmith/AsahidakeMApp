@@ -14,7 +14,6 @@ var geolocateControl = (function (Control) {
           } else if (geolocation.getTracking()) {
                 map.addLayer(geolocateOverlay);
                 console.dir(geolocation.getPosition());
-                //ここ
                 map.getView().setCenter(geolocation.getPosition());
                 isTracking = true;
           }
@@ -132,33 +131,7 @@ var map = new ol.Map({
     view:view
 });
 
-// //中岳温泉のポップアップの定義------
-// // Iconオブジェクト設定
-//  var iconFeature = new ol.Feature({
-//      geometry:new ol.geom.Point(markerNakadakeOnsen),
-//      name: 'testaaaa',
-//  });
 
-//  // Iconスタイル設定
-// var iconStyle = new ol.style.Style({
-//     image: new ol.style.Icon({
-//         src: 'images/onsen.png',
-//         //size:10
-//         //scale:0.5
-//     })
-// });
-
-// // Iconソース設定
-// const vectorSource = new ol.source.Vector({
-//     features: [iconFeature]
-// });
-
-// // Iconレイヤ設定
-// const vectorLayer = new ol.layer.Vector({
-//     source: vectorSource,
-//     style: iconStyle
-// });
-// //map.addLayer(vectorLayer);
 
 //自動スクロール用のpositon取得
 var scrollPoint = document.getElementById('column'); // 移動させたい位置の要素を取得
@@ -166,35 +139,6 @@ var rect = scrollPoint.getBoundingClientRect();
 var position = rect.top;    // 一番上からの位置を取得
 
 
-// $(function(){
-//     //トップボタンの表示
-//     var ToTopBtn = $('#toTop');
-//     ToTopBtn.hide();
-//     console.log($(window).height());
-//     // positionまでスクロールしたらボタン表示
-//     $("html,body").scroll(function () {
-//         if (($(this).scrollTop() > (position - $(window).height()*0.2) ) && ($('#toTop').is(':hidden'))){
-//             ToTopBtn.fadeIn();
-//             console.log('fadeIn');
-//         } else if(($(this).scrollTop() <= (position - $(window).height()*0.2)) && ($('#toTop').is(':visible'))){
-//             ToTopBtn.fadeOut();
-//             console.log('fadeOut');
-//         }
-//     });
-//     //トップボタンのクリックイベント
-//     ToTopBtn.click(function () {
-//         $('body, html').animate({scrollTop: 0 }, 500);
-//         return false;
-//     });
-
-//     //記事ボタンのクリックイベント
-//     $('#toColumn').click(function () {
-//         $('body, html').animate({scrollTop: position }, 500);
-//         return false;
-//     });    
-
-
-// });
 
 const toColumn = document.getElementById('toColumn');
 //クリックイベント関数の簡略化
@@ -206,7 +150,7 @@ onClick('aboutAsahidake', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
     $("#column").load("aboutDaisetsuzan.html");
-    $("html,body").animate({scrollTop:position},600);
+    // $("html,body").animate({scrollTop:position},600);
 });
 
 onClick('aboutSugatami', function() {
@@ -230,46 +174,13 @@ onClick('about6hLoop',function(){
 
 onClick('info',function(){
     $("#column").load("info.html");
-    $("html,body").animate({scrollTop:position},600);
+    // $("html,body").animate({scrollTop:position},600);
 
 });
 
 onClick('aboutDaisetsuzanGrade',function(){
     $("#column").load("aboutDaisetsuzanGrade.html");
 });
-
-
-
-// //写真レイヤーグループの中にVisibleがあるか
-// var isAnyPicVisible = function(){
-//     for(var k in layersList[2].values_.layers.array_){
-//         if(layersList[2].values_.layers.array_[k].getVisible()){
-//             return true;
-//         }
-//     }
-//     return false;
-// }
-
-// //写真一覧クリック処理用
-//  var pictureOnClick =  function(layer,id){
-//     return function(){
-//         console.dir('pictureOnClick');
-//         content.innerHTML='';
-//         //content.innerHTML = '<p>' + 'test' + '</P>' ;
-//         var dir = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.Path.replace(/[\\\/:]/g, '_').trim();
-//         content.innerHTML += '<img class="fit-picture" src=images/' + dir + ' id=' + id + ' alt="test Pic">'
-//         var point = layersList[2].values_.layers.array_[layer].values_.source.featureChangeKeys_[id][0].target.values_.geometry.flatCoordinates;
-//         overlayPopup.setPosition(point);
-//         container.style.display = 'block';
-//     }
-// }
-
-//memo
-//photosGroup  //画像グループ
-//photosGroup.getLayers().getArray()    //各画像レイヤー
-//layer.getFeatures()    //各Feature
-//feature.getGeometry.getCoordinates() // Featureの場所
-//
 
 //写真レイヤーグループの中のVisible写真
 function getVisiblePhotos () {
@@ -402,12 +313,5 @@ var geolocateOverlay = new ol.layer.Vector({
 
 geolocation.setTracking(true);
 
-// var scrollPoint = document.getElementById('column'); // 移動させたい位置の要素を取得
-// var rect = scrollPoint.getBoundingClientRect();
-// var position = rect.top;    // 一番上からの位置を取得
-// $(function(){
-//         $("#column").load("aboutDaisetsuzan.html");
-//         $("html,body").delay(1000).animate({scrollTop:position},1000);
-// });
 
 
