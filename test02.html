@@ -35,36 +35,59 @@
             overflow:scroll;
             background-color :var(--main-color-L1);
         }
-
-        div#MApp{
-            margin: 1% 10% 1% 10%;
-            width: auto;
-            height: 50%;
-            overflow: hidden;
-            background-color :#FCFCFC;
-            
+        /*PC用 769px以上のマップ部位のCSS*/
+        @media only screen and (min-width: 769px) {
+            div#MApp{
+                margin: 1% 10% 1% 10%;
+                width: auto;
+                height: 50%;
+                overflow: hidden;
+                background-color :#FCFCFC;
+                
+            }
+            div#map {
+                width: 90%;
+                height: 100%;
+                float: left;
+            }
+            div#pic {
+                width: 10%;
+                height: 100%;
+                float: right;
+                overflow:scroll;
+            }
+            #pic img {
+                max-width:100%;
+                height:auto;
+            }
         }
-        div#map {
-            width: 90%;
-            height: 100%;
-            float: left;
+        /*スマホ用のマップ部位のCSS*/
+        @media only screen and (max-width: 768px) {
+            div#MApp{
+                margin: 1% 0% 1% 0%;
+                width: auto;
+                height: 40%;
+                overflow: hidden;
+                background-color :#FCFCFC;
+                
+            }
+            div#map {
+                width: 100%;
+                height: 80%;
+            }
+            div#pic {
+                width: 100%;
+                height: 20%;
+                overflow-y:hidden;
+                white-space:nowrap;
+                overflow-x:scroll;
+            }
+            #pic img {
+                margin:1px;
+                height:100%;
+                width: auto;
+            }
         }
-        div#pic {
-            width: 10%;
-            height: 100%;
-            float: right;
-            overflow:scroll;
-        }
-        #pic img {
-            max-width:100%;
-            height:auto;
-        }  
-/*        div#column {
-            margin: 1% 13% 1% 13%;
-            width: 74%;
-            height: auto;
-            overflow:scroll;
-        } */
         </style>
 
 
@@ -153,13 +176,9 @@
         </div>
     </div>
 
-<section class="section has-background-link-light" id="column">
-    <!-- ここに記事読み込まれる。 -->
-</section>
-
-
-
-
+    <section class="section has-background-link-light" id="column">
+        <!-- ここに記事読み込まれる。 -->
+    </section>
 
 
     <script>
@@ -168,12 +187,6 @@
             $("#column").load("aboutDaisetsuzan.html");
         });
     </script>
-
-
-
-      
-
-
 
         <script src="resources/polyfills.js"></script>
         <script src="./resources/ol.js"></script>
