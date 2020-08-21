@@ -81,7 +81,6 @@ const overlayPopup = new ol.Overlay({
 var sugatami = ol.proj.fromLonLat([142.82877,43.66210]);
 var asahidake = ol.proj.fromLonLat([142.84192,43.66144]);
 var nakadakeOnsen = ol.proj.fromLonLat([142.84258,43.67512]);
-var markerNakadakeOnsen = ol.proj.fromLonLat([142.861559,43.681867]);
 
 var view = new ol.View({
     center: asahidake,
@@ -98,10 +97,10 @@ const photosGroup = new ol.layer.Group({
 
 // マップの定義前にイベント定義。関数定義は下
 photosGroup.getLayers().forEach(function (layer) {
-    layer.on('change:visible', DisplayPicColum);
+    layer.on('change:visible', DisplayPicColumn);
 })
 
-AsahidakeMap.onPhotosLoad(DisplayPicColum) // 写真レイヤーロード後
+AsahidakeMap.onPhotosLoad(DisplayPicColumn) // 写真レイヤーロード後
 
 // 登山道グループ
 const trailGroup = new ol.layer.Group({
@@ -298,7 +297,7 @@ function getVisiblePhotos () {
 //写真一覧の表示
 var eventAttached = false // 最初だけにクリックイベント付け. var=上に定義
 
-function DisplayPicColum() {
+function DisplayPicColumn() {
     console.dir('inPicColum');
     
     const visiblePhotos = getVisiblePhotos().reverse(); // 順番は反対

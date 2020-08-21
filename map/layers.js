@@ -97,7 +97,7 @@ var AsahidakeMap = (function (exports) {
 
   function highlightTrail(trail) {
     if (!TRAIL_NAMES.includes(trail)) {
-      console.warn(`Can't highlight ${trail}. No matching trail found`);
+      console.warn("Can't highlight ${trail}. No matching trail found");
       highlightedTrail = null;
     }
 
