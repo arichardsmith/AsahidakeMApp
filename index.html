@@ -97,30 +97,23 @@
         <script>
         // URL_Fragment を使った　URLの変更
         console.dir(document.location.hash);
-        </script>
-
-
-        <script>
-        console.dir(document.location.hash);
-        // URL_Parameter を使った　URLの変更
-         var index_pages=['aboutSugatami',
-                                'aboutDaisetsuzan',
-                                'about6hLoop',
-                                'aboutTrailToPeak',
-                                'info',
-                                'aboutDaisetsuzanGrade',
-                                "jremey'sMap"];
-
-            window.onload = function onLoad() {
-            param = GetQueryString();
+        var index_pages=['aboutSugatami',
+                        'aboutDaisetsuzan',
+                        'about6hLoop',
+                        'aboutTrailToPeak',
+                        'info',
+                        'aboutDaisetsuzanGrade',
+                        "jremey'sMap"];
+        window.onload = function onLoad() {
+            var urlFragment = document.location.hash.substring(1);
             var isLoaded =false;
 
-            if(param == null || index_pages["page"]  =='undefined' ){
+            if(urlFragment == null ){
                 $("#column").load("aboutSugatami.html");
-                console.dir('該当なし2');
+                console.dir('該当なし1');
             }else{
                 for(var k in index_pages){
-                    if(param["page"] == index_pages[k]){
+                    if(urlFragment == index_pages[k]){
                         $("#column").load(index_pages[k] + ".html");
                         console.dir(index_pages[k] + ' を開きました');
                         isLoaded = true;
@@ -129,10 +122,47 @@
                 }
                 if(!isLoaded){
                     $("#column").load("aboutSugatami.html");
-                    console.dir('該当なし');
+                    console.dir('該当なし2');
                 }
             }
         }
+
+        </script>
+
+
+        <script>
+        // console.dir(document.location.hash);
+        // // URL_Parameter を使った　URLの変更
+        //  var index_pages=['aboutSugatami',
+        //                         'aboutDaisetsuzan',
+        //                         'about6hLoop',
+        //                         'aboutTrailToPeak',
+        //                         'info',
+        //                         'aboutDaisetsuzanGrade',
+        //                         "jremey'sMap"];
+
+        //     window.onload = function onLoad() {
+        //     param = GetQueryString();
+        //     var isLoaded =false;
+
+        //     if(param == null || index_pages["page"]  =='undefined' ){
+        //         $("#column").load("aboutSugatami.html");
+        //         console.dir('該当なし2');
+        //     }else{
+        //         for(var k in index_pages){
+        //             if(param["page"] == index_pages[k]){
+        //                 $("#column").load(index_pages[k] + ".html");
+        //                 console.dir(index_pages[k] + ' を開きました');
+        //                 isLoaded = true;
+        //                 break;
+        //             }
+        //         }
+        //         if(!isLoaded){
+        //             $("#column").load("aboutSugatami.html");
+        //             console.dir('該当なし');
+        //         }
+        //     }
+        // }
         </script>
 
         <!-- /*ナビゲーションバー*/ -->
