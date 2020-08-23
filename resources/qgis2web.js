@@ -250,7 +250,7 @@ function imgHTML(src) {
 //マップクリックイベント
 function handleMapPointer(evt) {
     const pixel = evt.pixel;
-    const coord = evt.coordinate;
+    let coord = null;
     const photoLayers = photosGroup.getLayers().getArray();
 
     const imgs = []
@@ -269,6 +269,8 @@ function handleMapPointer(evt) {
     if (filteredImages.length > 0) {
         // クリックした写真Pointある
         showPopup(filteredImages, coord);
+    } else {
+        hidePopup()
     }
 }
 
