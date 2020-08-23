@@ -57,10 +57,12 @@ function showPopup(imgSrcs, coords) {
     
     content.innerHTML = imgHtml;
     overlayPopup.setPosition(coords);
+    
+    container.style.display = 'block';
+    
     overlayPopup.panIntoView({
         margin: 20
     })
-    container.style.display = 'block';
 }
 
 function hidePopup() {
@@ -72,7 +74,8 @@ function hidePopup() {
 closer.addEventListener('click', hidePopup)
 
 const overlayPopup = new ol.Overlay({
-    element: container
+    element: container,
+    positioning: 'top-center'
 });
 
 
@@ -146,10 +149,11 @@ function onClick(id, callback) {
     document.getElementById(id).addEventListener('click', callback);
 }
 //各ボタンの処理
-onClick('aboutAsahidake', function() {
+onClick('aboutDaisetsuzan', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
     $("#column").load("aboutDaisetsuzan.html");
+    document.location.hash="aboutDaisetsuzan";
     // $("html,body").animate({scrollTop:position},600);
 });
 
@@ -157,29 +161,34 @@ onClick('aboutSugatami', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
     $("#column").load("aboutSugatami.html");
+    document.location.hash="aboutSugatami";
 });
 
 onClick('aboutTrailToPeak',function(){
     view.setCenter(asahidake);
     view.setZoom(15);
     $("#column").load("aboutTrailToPeak.html");
+    document.location.hash="aboutTrailToPeak";
 });
 
 onClick('about6hLoop',function(){
     view.setCenter(nakadakeOnsen);
     view.setZoom(14);
     $("#column").load("about6hLoop.html");
+    document.location.hash="about6hLoop";
 
 });
 
 onClick('info',function(){
     $("#column").load("info.html");
+    document.location.hash="info";
     // $("html,body").animate({scrollTop:position},600);
 
 });
 
 onClick('aboutDaisetsuzanGrade',function(){
     $("#column").load("aboutDaisetsuzanGrade.html");
+    document.location.hash="aboutDaisetsuzanGrade";
 });
 
 //写真レイヤーグループの中のVisible写真
@@ -250,7 +259,7 @@ function imgHTML(src) {
 //マップクリックイベント
 function handleMapPointer(evt) {
     const pixel = evt.pixel;
-    const coord = evt.coordinate;
+    let coord = null;
     const photoLayers = photosGroup.getLayers().getArray();
 
     const imgs = []
@@ -259,8 +268,18 @@ function handleMapPointer(evt) {
             // 写真レイヤーの場合
             const imgSrc = feature.get('src');
             imgs.push(imgSrc);
+            if (coord === null) {
+                const geom = feature.getGeometry()
+                if (geom !== undefined && typeof geom.getCoordinates === 'function') {
+                    coord = geom.getCoordinates()
+                }
+            }
         }
     })
+
+    if (coord === null) {
+        coord = evt.coordinates
+    }
 
     const filteredImages = imgs
         .filter(img => img !== undefined) // srcのないのを抜く
@@ -269,6 +288,8 @@ function handleMapPointer(evt) {
     if (filteredImages.length > 0) {
         // クリックした写真Pointある
         showPopup(filteredImages, coord);
+    } else {
+        hidePopup()
     }
 }
 
