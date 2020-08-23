@@ -57,10 +57,12 @@ function showPopup(imgSrcs, coords) {
     
     content.innerHTML = imgHtml;
     overlayPopup.setPosition(coords);
+    
+    container.style.display = 'block';
+    
     overlayPopup.panIntoView({
         margin: 20
     })
-    container.style.display = 'block';
 }
 
 function hidePopup() {
@@ -72,7 +74,8 @@ function hidePopup() {
 closer.addEventListener('click', hidePopup)
 
 const overlayPopup = new ol.Overlay({
-    element: container
+    element: container,
+    positioning: 'top-center'
 });
 
 
@@ -259,8 +262,18 @@ function handleMapPointer(evt) {
             // 写真レイヤーの場合
             const imgSrc = feature.get('src');
             imgs.push(imgSrc);
+            if (coord === null) {
+                const geom = feature.getGeometry()
+                if (geom !== undefined && typeof geom.getCoordinates === 'function') {
+                    coord = geom.getCoordinates()
+                }
+            }
         }
     })
+
+    if (coord === null) {
+        coord = evt.coordinates
+    }
 
     const filteredImages = imgs
         .filter(img => img !== undefined) // srcのないのを抜く
