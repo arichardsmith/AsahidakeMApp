@@ -144,6 +144,8 @@ var position = rect.top;    // 一番上からの位置を取得
 
 const toColumn = document.getElementById('toColumn');
 //クリックイベント関数の簡略化
+    //javascript使っていたり　JQuery使っていたり分かりづらい
+    //統一すべき
 function onClick(id, callback) {
     document.getElementById(id).addEventListener('click', callback);
 }
