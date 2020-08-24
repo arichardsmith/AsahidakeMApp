@@ -93,15 +93,24 @@ var AsahidakeMap = (function (exports) {
     'loop'
   ];
 
+  // Allow one highlighted trail per map
   let highlightedTrail = null;
 
+  /**
+   * Highlights a trail
+   * @param {*} map - Map object to update
+   * @param {*} trail - Trail to highlight
+   */
   function highlightTrail(trail) {
-    if (!TRAIL_NAMES.includes(trail)) {
-      console.warn("Can't highlight ${trail}. No matching trail found");
+    if (trail !== null && !TRAIL_NAMES.includes(trail)) {
+      console.warn(`Can't highlight ${trail}. No matching trail found`);
       highlightedTrail = null;
     }
 
     highlightedTrail = trail;
+    
+    // Mark each layer as changed to update map
+    trailLayers.forEach(layer => layer.changed());
   }
 
   function styleTrail(feature) {
@@ -109,16 +118,13 @@ var AsahidakeMap = (function (exports) {
     const trails = feature.get('trails');
 
     // Set alpha depending on currently highlighted trail
-    const alpha = highlightedTrail === null
-      ? 1
-      : trails.includes(highlightedTrail)
+    const alpha = highlightedTrail === null || trails.includes(highlightedTrail)
         ? 1
         : 0.5;
 
-    const color = getLayerColour(grade, alpha);
     return new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color,
+        color: getLayerColour(grade, alpha),
         width: STROKE_WIDTH
       })
     })
