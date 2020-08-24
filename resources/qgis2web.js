@@ -13,7 +13,6 @@ var geolocateControl = (function (Control) {
                 isTracking = false;
           } else if (geolocation.getTracking()) {
                 map.addLayer(geolocateOverlay);
-                console.dir(geolocation.getPosition());
                 map.getView().setCenter(geolocation.getPosition());
                 isTracking = true;
           }
@@ -152,43 +151,35 @@ function onClick(id, callback) {
 onClick('aboutDaisetsuzan', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
-    $("#column").load("aboutDaisetsuzan.html");
-    document.location.hash="aboutDaisetsuzan";
-    // $("html,body").animate({scrollTop:position},600);
+    pushStateAndLoad('aboutDaisetsuzan');
 });
 
 onClick('aboutSugatami', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
-    $("#column").load("aboutSugatami.html");
-    document.location.hash="aboutSugatami";
+    pushStateAndLoad('aboutSugatami');
 });
 
 onClick('aboutTrailToPeak',function(){
     view.setCenter(asahidake);
     view.setZoom(15);
-    $("#column").load("aboutTrailToPeak.html");
-    document.location.hash="aboutTrailToPeak";
+    pushStateAndLoad('aboutTrailToPeak');
 });
 
 onClick('about6hLoop',function(){
     view.setCenter(nakadakeOnsen);
     view.setZoom(14);
-    $("#column").load("about6hLoop.html");
-    document.location.hash="about6hLoop";
-
+    pushStateAndLoad('about6hLoop');
 });
 
 onClick('info',function(){
-    $("#column").load("info.html");
-    document.location.hash="info";
+    pushStateAndLoad('info');
     // $("html,body").animate({scrollTop:position},600);
 
 });
 
 onClick('aboutDaisetsuzanGrade',function(){
-    $("#column").load("aboutDaisetsuzanGrade.html");
-    document.location.hash="aboutDaisetsuzanGrade";
+    pushStateAndLoad('aboutDaisetsuzanGrade');
 });
 
 //写真レイヤーグループの中のVisible写真
@@ -218,7 +209,6 @@ function getVisiblePhotos () {
 var eventAttached = false // 最初だけにクリックイベント付け. var=上に定義
 
 function DisplayPicColumn() {
-    console.dir('inPicColum');
     
     const visiblePhotos = getVisiblePhotos().reverse(); // 順番は反対
 
