@@ -85,40 +85,20 @@ var AsahidakeMap = (function (exports) {
     }
   }
 
-  const TRAIL_NAMES = [
-    'summit',
-    'nakadake',
-    'tennyoga',
-    'tennyogahara',
-    'loop'
-  ];
-
-  let highlightedTrail = null;
-
-  function highlightTrail(trail) {
-    if (!TRAIL_NAMES.includes(trail)) {
-      console.warn("Can't highlight ${trail}. No matching trail found");
-      highlightedTrail = null;
-    }
-
-    highlightedTrail = trail;
-  }
-
   function styleTrail(feature) {
     const grade = feature.get('grade');
     const trails = feature.get('trails');
 
+    const highlightedTrail = highlight.currentTrail;
+
     // Set alpha depending on currently highlighted trail
-    const alpha = highlightedTrail === null
-      ? 1
-      : trails.includes(highlightedTrail)
+    const alpha = highlightedTrail === null || trails.includes(highlightedTrail)
         ? 1
         : 0.5;
 
-    const color = getLayerColour(grade, alpha);
     return new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color,
+        color: getLayerColour(grade, alpha),
         width: STROKE_WIDTH
       })
     })
@@ -165,6 +145,74 @@ var AsahidakeMap = (function (exports) {
   }
 
   const trailLayers = [1, 2, 3, 4, 5].map(createTrailLayer);
+
+  const TRAIL_NAMES = [
+    'summit',
+    'nakadake',
+    'tennyogahara',
+    'loop'
+  ];
+
+  /**
+   * Trail highlight state wrapper
+   * @param {*} layers - Layers to update on change
+   */
+  function Highlighter(layers) {
+    this.updateLayers = layers;
+    this.currentTrail = null;
+  }
+
+  /**
+   * Updates highlighted trail
+   * @param {*} trail 
+   */
+  Highlighter.prototype.update = function (trail) {
+    if (trail !== null && !TRAIL_NAMES.includes(trail)) {
+      console.warn(`Can't highlight ${trail}. No matching trail found`);
+      trail = null;
+    }
+
+    this.currentTrail = trail;
+    // Set all layers to changed to update map
+    this.updateLayers.forEach(layer => layer.changed());
+  };
+
+  /**
+   * Highlights summit trail
+   */
+  Highlighter.prototype.summit = function () {
+    this.update('summit');
+  };
+
+  /**
+   * Highlights loop trail
+   */
+  Highlighter.prototype.loop = function () {
+    this.update('loop');
+  };
+
+  /**
+   * Highlights nakadake trail
+   */
+  Highlighter.prototype.nakadake = function () {
+    this.update('nakadake');
+  };
+
+  /**
+   * Highlights tennyogahara trail
+   */
+  Highlighter.prototype.tennyogahara = function () {
+    this.update('tennyogahara');
+  };
+
+  /**
+   * Clears trail highlighting
+   */
+  Highlighter.prototype.clear = function () {
+    this.update(null);
+  };
+
+  const highlight = new Highlighter(trailLayers);
 
   const POINT_RADIUS = 5;
   const LABEL_COLOUR = 'rgba(64, 64, 64, 1)';
@@ -366,7 +414,7 @@ var AsahidakeMap = (function (exports) {
 
   exports.baseTiles = baseTiles;
   exports.enLabelsLayer = enLabelsLayer;
-  exports.highlightTrail = highlightTrail;
+  exports.highlight = highlight;
   exports.jpLabelsLayer = jpLabelsLayer;
   exports.onPhotosLoad = onPhotosLoad;
   exports.photoLayers = photoLayers;
