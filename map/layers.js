@@ -94,7 +94,7 @@ var AsahidakeMap = (function (exports) {
     // Set alpha depending on currently highlighted trail
     const alpha = highlightedTrail === null || trails.includes(highlightedTrail)
         ? 1
-        : 0.5;
+        : 0.3;    //Smithさんへ　I changed this.
 
     return new ol.style.Style({
       stroke: new ol.style.Stroke({

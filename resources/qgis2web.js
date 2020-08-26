@@ -150,36 +150,39 @@ function onClick(id, callback) {
     document.getElementById(id).addEventListener('click', callback);
 }
 //各ボタンの処理
+//大雪山について
 onClick('aboutDaisetsuzan', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
     pushStateAndLoad('aboutDaisetsuzan');
 });
-
+//姿見について
 onClick('aboutSugatami', function() {
     view.setCenter(sugatami);
     view.setZoom(16.5);
     pushStateAndLoad('aboutSugatami');
 });
-
+//旭岳山頂について
 onClick('aboutTrailToPeak',function(){
+    //AsahidakeMap.highlight.summit();
+    //console.dir(SetOnHightLightSummit);
     view.setCenter(asahidake);
     view.setZoom(15);
     pushStateAndLoad('aboutTrailToPeak');
 });
-
+//６時間ループ
 onClick('about6hLoop',function(){
     view.setCenter(nakadakeOnsen);
     view.setZoom(14);
     pushStateAndLoad('about6hLoop');
 });
-
+//登山道情報
 onClick('info',function(){
     pushStateAndLoad('info');
     // $("html,body").animate({scrollTop:position},600);
 
 });
-
+//大雪山グレードについて
 onClick('aboutDaisetsuzanGrade',function(){
     pushStateAndLoad('aboutDaisetsuzanGrade');
 });
