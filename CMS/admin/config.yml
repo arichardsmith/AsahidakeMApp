@@ -9,12 +9,12 @@ media_folder: "CMS/content/images"
 public_folder: "../../../images"
 
 collections:
-  - name: "blog"
-    label: "Blog"
+  - name: "使い方"
+    label: "readMe"
     folder: "content"
     create: true
     slug: "{{fields.slug}}"
-    identifier_field: title
+    identifier_field: label
     fields:
       - {label: "Title", name: "title", widget: "string"}
       - {label: "Date", name: "date", widget: "date",format: "YYYY-MM-DD"}
