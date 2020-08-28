@@ -9,6 +9,6 @@
     # All the feeds we wish to gather for use in the build
   
     [[plugins.inputs.feeds]]
-      name = "KanshiinBlogtest"
-      url = "https://jsonplaceholder.typicode.com/todos/1"
+      name = "KanshiinBlogtestaa"
+      url = "https://hawksworx.com/feed.json"
       ttl = 86400
