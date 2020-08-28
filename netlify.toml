@@ -7,12 +7,8 @@
     dataDir = "site/_data"
 
     # All the feeds we wish to gather for use in the build
-
+  
     [[plugins.inputs.feeds]]
-      name = "hawksworx"
-      url = "https://hawksworx.com/feed.json"
-      ttl = 3600
-    [[plugins.inputs.feeds]]
-      name = "netlify"
-      url = "https://www.netlify.com/blog/index.xml"
+      name = "KanshiinBlog"
+      url = "https://blog.goo.ne.jp/2291yamaiku/rss2.xml"
       ttl = 86400
