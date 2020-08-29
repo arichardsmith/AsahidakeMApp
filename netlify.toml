@@ -11,4 +11,4 @@
     [[plugins.inputs.feeds]]
       name = "KanshiinBlog"
       url = "https://hawksworx.com/feed.json"
-      ttl = 86400
+      ttl = 1
