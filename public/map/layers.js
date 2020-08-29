@@ -66,6 +66,51 @@ var AsahidakeMap = (function (exports) {
     })
   }
 
+  const kurodake = [
+  	15899228.890813727,
+  	5413063.7404938275,
+  	15912938.319705235,
+  	5422830.47369097
+  ];
+  const nakadake = [
+  	15899228.890813727,
+  	5413272.70665701,
+  	15903199.394036591,
+  	5416284.892751929
+  ];
+  const loop = [
+  	15899228.890813727,
+  	5413063.7404938275,
+  	15904526.157371525,
+  	5416403.292199796
+  ];
+  const tennyoga = [
+  	15896267.3550505,
+  	5411330.6321919765,
+  	15899383.076703139,
+  	5413272.70665701
+  ];
+  const summit = [
+  	15899228.890813727,
+  	5413063.7404938275,
+  	15902455.52199312,
+  	5413531.170369489
+  ];
+  const sugatami = [
+  	15899228.890813727,
+  	5413048.429889194,
+  	15900239.875193141,
+  	5413615.0496835755
+  ];
+  var trailExtents = {
+  	kurodake: kurodake,
+  	nakadake: nakadake,
+  	loop: loop,
+  	tennyoga: tennyoga,
+  	summit: summit,
+  	sugatami: sugatami
+  };
+
   const STROKE_WIDTH = 3;
 
   function getLayerColour(grade, alpha = 1) {
@@ -94,7 +139,7 @@ var AsahidakeMap = (function (exports) {
     // Set alpha depending on currently highlighted trail
     const alpha = highlightedTrail === null || trails.includes(highlightedTrail)
         ? 1
-        : 0.3;    //Smithさんへ　I changed this.
+        : 0.5;
 
     return new ol.style.Style({
       stroke: new ol.style.Stroke({
@@ -102,20 +147,6 @@ var AsahidakeMap = (function (exports) {
         width: STROKE_WIDTH
       })
     })
-  }
-
-  function filterTrails(geoData, targetGrade) {
-    if (geoData === undefined || !Array.isArray(geoData.features)) {
-      console.warn('Unable to filter trail features');
-      return geoData
-    }
-
-    const filteredFeatures = geoData.features.filter(feat => feat.properties.grade === targetGrade);
-
-    return {
-      ...geoData,
-      features: filteredFeatures
-    }
   }
 
   function gradeSVG(grade) {
@@ -134,8 +165,10 @@ var AsahidakeMap = (function (exports) {
       title: `${gradeSVG(grade)} グレード ${grade}`
     });
 
+    const gradeKey = `grade${grade}`;
+
     const features = loadSource('base.json')
-      .then(base => filterTrails(base.trails, grade));
+      .then(base => base.trails[gradeKey]);
 
     connectGeoJSONSource(layer, features, {
       attributions: '<a href="http://www.daisetsuzan.or.jp/">大雪山国立公園連絡協議会</a>'
@@ -146,12 +179,7 @@ var AsahidakeMap = (function (exports) {
 
   const trailLayers = [1, 2, 3, 4, 5].map(createTrailLayer);
 
-  const TRAIL_NAMES = [
-    'summit',
-    'nakadake',
-    'tennyogahara',
-    'loop'
-  ];
+  const TRAIL_NAMES = Object.keys(trailExtents);
 
   /**
    * Trail highlight state wrapper
@@ -177,33 +205,15 @@ var AsahidakeMap = (function (exports) {
     this.updateLayers.forEach(layer => layer.changed());
   };
 
-  /**
-   * Highlights summit trail
-   */
-  Highlighter.prototype.summit = function () {
-    this.update('summit');
-  };
-
-  /**
-   * Highlights loop trail
-   */
-  Highlighter.prototype.loop = function () {
-    this.update('loop');
-  };
-
-  /**
-   * Highlights nakadake trail
-   */
-  Highlighter.prototype.nakadake = function () {
-    this.update('nakadake');
-  };
-
-  /**
-   * Highlights tennyogahara trail
-   */
-  Highlighter.prototype.tennyogahara = function () {
-    this.update('tennyogahara');
-  };
+  // Automate the helper functions
+  for (let trail of TRAIL_NAMES) {
+    /**
+     * Highlight function
+     */
+    Highlighter.prototype[trail] = function () {
+      this.update(trail);
+    };
+  }
 
   /**
    * Clears trail highlighting
@@ -414,6 +424,7 @@ var AsahidakeMap = (function (exports) {
 
   exports.baseTiles = baseTiles;
   exports.enLabelsLayer = enLabelsLayer;
+  exports.extents = trailExtents;
   exports.highlight = highlight;
   exports.jpLabelsLayer = jpLabelsLayer;
   exports.onPhotosLoad = onPhotosLoad;
