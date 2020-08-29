@@ -84,11 +84,32 @@ var asahidake = ol.proj.fromLonLat([142.84192,43.66144]);
 var nakadakeOnsen = ol.proj.fromLonLat([142.84258,43.67512]);
 
 var view = new ol.View({
-    center: asahidake,
     extent: [15890800.0, 5401150.0, 15918700.0, 5426850.0],
     zoom: 12,
     maxZoom: 16, minZoom: 11
 });
+
+/**
+ * Viewの範囲変化
+ * 
+ * @param {string|Array<number>} extent - 登山道のstring又はnumberのarray
+ */
+function fitView(extent) {
+    if (typeof extent === 'string') {
+        if (AsahidakeMap.extents[extent] === undefined) {
+            throw new Error('No matching extent for "' + extent + '"');
+        }
+
+        extent = AsahidakeMap.extents[extent];
+    }
+
+    view.fit(extent, {
+        padding: [20, 50, 20, 50], // コースの周りのpadding (px)
+        duration: 300 // Animation
+    });
+}
+
+fitView('loop');
 
 // レイヤーグループ
 const photosGroup = new ol.layer.Group({
@@ -150,39 +171,32 @@ function onClick(id, callback) {
     document.getElementById(id).addEventListener('click', callback);
 }
 //各ボタンの処理
-//大雪山について
 onClick('aboutDaisetsuzan', function() {
-    view.setCenter(sugatami);
-    view.setZoom(16.5);
+    fitView('sugatami');
     pushStateAndLoad('aboutDaisetsuzan');
 });
-//姿見について
+
 onClick('aboutSugatami', function() {
-    view.setCenter(sugatami);
-    view.setZoom(16.5);
+    fitView('sugatami');
     pushStateAndLoad('aboutSugatami');
 });
-//旭岳山頂について
+
 onClick('aboutTrailToPeak',function(){
-    //AsahidakeMap.highlight.summit();
-    //console.dir(SetOnHightLightSummit);
-    view.setCenter(asahidake);
-    view.setZoom(15);
+    fitView('summit');
     pushStateAndLoad('aboutTrailToPeak');
 });
-//６時間ループ
+
 onClick('about6hLoop',function(){
-    view.setCenter(nakadakeOnsen);
-    view.setZoom(14);
+    fitView('loop');
     pushStateAndLoad('about6hLoop');
 });
-//登山道情報
+
 onClick('info',function(){
     pushStateAndLoad('info');
     // $("html,body").animate({scrollTop:position},600);
 
 });
-//大雪山グレードについて
+
 onClick('aboutDaisetsuzanGrade',function(){
     pushStateAndLoad('aboutDaisetsuzanGrade');
 });
