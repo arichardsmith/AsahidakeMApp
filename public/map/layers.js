@@ -136,17 +136,28 @@ var AsahidakeMap = (function (exports) {
 
     const highlightedTrail = highlight.currentTrail;
 
-    // Set alpha depending on currently highlighted trail
-    const alpha = highlightedTrail === null || trails.includes(highlightedTrail)
-        ? 1
-        : 0.5;
-
-    return new ol.style.Style({
+    const baseStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color: getLayerColour(grade, alpha),
+        color: getLayerColour(grade, 1),
         width: STROKE_WIDTH
       })
     })
+
+    if (!trails.includes(highlightedTrail)) {
+      return baseStyle
+    }
+
+    const highlightStyle = new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: getLayerColour(grade, 0.3), // ハイライトalpha
+        width: STROKE_WIDTH + 8 // ハイライト幅
+      })
+    })
+
+    return [
+      baseStyle,
+      highlightStyle
+    ]
   }
 
   function gradeSVG(grade) {
