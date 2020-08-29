@@ -15,5 +15,5 @@
   
     [[plugins.inputs.feeds]]
       name = "KanshiinBlogaa"
-      url = "https://hawksworx.com/feed.json"
+      url = "https://blog.goo.ne.jp/2291yamaiku/rss2.xml"
       ttl = 1
