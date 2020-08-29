@@ -1,7 +1,7 @@
 [build]
   publish = "public"
 
-  
+
 
 # Config for the Netlify Build Plugin: netlify-plugin-fetch-feeds
 [[plugins]]
@@ -9,7 +9,7 @@
 
   [plugins.inputs]
     # Where should data files reside
-    dataDir = "CMS"
+    dataDir = "public/CMS"
 
     # All the feeds we wish to gather for use in the build
   
