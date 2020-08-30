@@ -3,10 +3,14 @@ backend:
   repo: Asahidake/AsahidakeMApp
   branch: master
 
+# Allegedly doesn't work in local + Do we really need it?
 publish_mode: editorial_workflow
 
-media_folder: "CMS/content/images"
-public_folder: "../../../images"
+# For local dev
+# local_backend: true
+
+media_folder: "public/images/cms"
+public_folder: "images/cms"
 
 collections:
   - name: "使い方"
@@ -24,3 +28,31 @@ collections:
       - {label: "Slug", name: "slug", widget: "string"}
       - {label: "Related", name: "related_post", widget: "string", required: false}
       - {label: "Body", name: "body", widget: "markdown"}
+  - label: "登山道情報"
+    name: tozan-joho
+    files:
+      - label: "データ管理"
+        name: data
+        file: content/tozanJoho.json
+        fields:
+          - label: "登山道情報"
+            name: entries
+            widget: list
+            summary: "{{fields.trail}} - {{fields.date}}"
+            fields:
+              - label: "登山道"
+                name: trail
+                widget: select
+                options:
+                  - "旭岳山頂"
+                  - "裾合平・中岳温泉"
+                  - "天女が原"
+                  - "裏旭"
+              - label: "日付"
+                name: date
+                widget: datetime
+                dateFormat: "YYYY年MM月DD日"
+                timeFormat: false
+              - label: "画像データ"
+                name: src
+                widget: image

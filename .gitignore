@@ -1,2 +1,5 @@
 # Ignore Mac's random files
 .DS_Store
+
+# Ignore node files
+node_modules
