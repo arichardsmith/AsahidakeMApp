@@ -1,32 +1,36 @@
-<div class="tile is-ancestor is-vertical">	
+<!-- このデータは自動作成、編集は../src/info.ejsで-->
+<div class="tile is-ancestor is-vertical">
 	<div class="tile box is-vertical">
 		<h1 class="title is-1">登山道情報</h1>
 		<div class="tile">
-			<div class="tile is-parent">
+      <div class="tile is-parent">
 				<article class="tile is-12 is-child box">
-					<a  href="images/ToBottomCullum/Trail_Info/latest/旭岳山頂.jpg" target="_blank" rel="noopener noreferrer">
+					<a  href="images/cms/200705-山頂登山道情報-日本語.jpg" target="_blank" rel="noopener noreferrer">
 						<h4 class="title is-4">旭岳山頂へ登山道</h4>
+						<time class="is-block subtitle" datetime="2020-07-05T00:44:24.477Z">7月初旬</time>
 						<figure class="image is-hidden-touch">
-							<img id="picInfoPeak"src="" >
+							<img id="picInfoPeak"src="images/cms/200705-山頂登山道情報-日本語.jpg" >
 						</figure>
 					</a>
 				</article>
 			</div>
 			<div class="tile is-parent">
 				<article class="tile is-12 is-child box">
-					<a  href="images/ToBottomCullum/Trail_Info/latest/裾合平中岳温泉.jpg" target="_blank" rel="noopener noreferrer">
+					<a  href="images/cms/200824-中岳温泉登山道情報-日本語版.jpg" target="_blank" rel="noopener noreferrer">
 					<h4 class="title is-4">裾合平中岳温泉</h4>
+					<time class="is-block subtitle" datetime="2020-08-24T00:45:00.300Z">8月下旬</time>
 					<figure class="image is-hidden-touch">
-						<img id="picInfoSusoai" src="" >
+						<img id="picInfoSusoai" src="images/cms/200824-中岳温泉登山道情報-日本語版.jpg" >
 					</figure>
 				</article>
 			</div>
 			<div class="tile is-parent">
-				<a  href="images/ToBottomCullum/Trail_Info/latest/天女ヶ原.jpg" target="_blank" rel="noopener noreferrer">
+				<a  href="images/cms/200813-天女ヶ原登山道情報-日本語版.jpg" target="_blank" rel="noopener noreferrer">
 					<article class="tile is-12 is-child box">
 						<h4 class="title is-4">天女が原登山道</h4>
+						<time class="is-block subtitle" datetime="2020-08-13T00:45:20.452Z">8月中旬</time>
 						<figure class="image is-hidden-touch">
-							<img id="picInfoGezan" src="" >
+							<img id="picInfoGezan" src="images/cms/200813-天女ヶ原登山道情報-日本語版.jpg" >
 						</figure>
 					</article>
 				</a>
@@ -78,14 +82,3 @@
 		</div>
 	</div>
 </div>
-
-<!-- 最新登山道情報表示時にキャッシュを読み取らないよう対策                -->
-<!-- img scrの中身だけでOK                                           -->
-<!-- a  href の中身開くときはキャッシュを読み込まない 少なくても　chromeは -->
-<script>
-var date = new Date;
-var param=date.getMonth()+''+date.getDate()+''+date.getHours()+''+date.getMinutes()+''+date.getSeconds();
-$('#picInfoPeak').attr('src','images/ToBottomCullum/Trail_Info/latest/旭岳山頂.jpg?' + param);
-$('#picInfoSusoai').attr('src','images/ToBottomCullum/Trail_Info/latest/裾合平中岳温泉.jpg?' + param);
-$('#picInfoGezan').attr('src','images/ToBottomCullum/Trail_Info/latest/天女ヶ原.jpg?' + param);
-</script>
