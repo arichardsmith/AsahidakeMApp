@@ -1,0 +1,143 @@
+<!-- <script src="resources/jquery-3.5.1.min.js"></script> -->
+
+
+<style>
+.readmore{
+    position: relative;
+    box-sizing: border-box;
+    /*以下お好み*/
+    /* ボーダーを付ける場合 */
+    padding: 10px;
+    border: 1px solid #CCC;
+}
+
+.readmore-content{
+    position: relative;
+    overflow: hidden;
+    /*以下お好み*/
+    /*高さの初期値*/
+    height: 400px;
+}
+.readmore-content::before {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    content: "";
+    /*以下お好み グラデーションの色と高さ 高さはreadmoreのheight以下にすること*/
+    height: 50px;
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.8) 50%, #fff 100%);
+    background: linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.8) 50%, #fff 100%);
+}
+
+/* 続きを読むボタン */
+.readmore-label{
+    display: table;
+    bottom: 10px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    /*margin: 0 auto;*/
+    z-index: 2;
+    /*padding: 0 10px;*/
+    /*background-color: #ff7777;*/
+    /*border-radius: 10px;*/
+    /*color: #FFF;*/
+}
+.readmore-label:before{
+    content: '続きを読む';
+}
+
+.readmore-check{
+    display: none;
+}
+/*チェック時にボタンを非表示*/
+.readmore-check:checked ~ .readmore-label{
+    position: static;
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+    /* 「続きを読む」を押した後、元に戻す必要がない場合は、上のオプションを消してこの1行だけにする */
+    /* display: none; */
+}
+.readmore-check:checked ~ .readmore-label:before{
+    content: '閉じる';
+}
+/*チェック時に高さを自動に戻す*/
+.readmore-check:checked ~ .readmore-content{
+    height: auto;
+}
+/*チェック時グラデーション等を削除*/
+.readmore-check:checked ~ .readmore-content::before {
+    display: none;
+}
+</style>
+<div class="column is-8 is-offset-2">
+	<h1 class="title is-1">監視員ブログ</h1>
+</div>
+ <div class="column is-8 is-offset-2" id="items">
+ </div>
+
+<script>
+	$.getJSON('KanshiinBlog.json', (data) => {
+		// JSONデータを受信した後に実行する処理
+		//make div block
+		//box
+		var htmlStr ="";
+		for(var i in data.rss.channel.item){
+			 htmlStr += `<div class="card article has-background-white-bis" id="item_${i}">
+			 				<input id="moreButton_${i}" class="readmore-check" type="checkbox">
+			 				<div class="card-content readmore-content">
+			 					<div class="media-content has-text-centered">
+			 					<a id="date_${i}"></a>
+				 					<h1 class="title is-size-4" id="headTitle_${i}"></h1>
+				 					<div  id="headPic_${i}"></div>
+				 				</div>
+				 				<div class="content article-body " style="margin:2% 5%; text-align : center;" id="description_${i}" ></div>
+ 						</div>
+ 						<label class="readmore-label button is-link is-light" for="moreButton_${i}"></label>
+						</div><br/>`;
+		}
+		$("#items").html(htmlStr);
+
+		for(var i in data.rss.channel.item){
+			//Output Date
+			var date = new Date(Date.parse(data.rss.channel.item[i]["dc:date"]));
+			var weeks = ["日", "月", "火", "水", "木", "金", "土"];
+			var date = `${date.getFullYear()}年 ${date.getMonth()}月 ${date.getDate()}日 ${weeks[date.getDay()]}曜日`;
+			console.dir(date);
+			$(`#date_${i}`).html(date);
+			
+
+
+			//Output Title
+			$(`#headTitle_${i}`).html( JSON.stringify(data.rss.channel.item[i].title).slice(1,-1) );
+
+			//Output head pic
+			if (data.rss.channel.item[i].enclosure != null){
+				var picURL = JSON.stringify(data.rss.channel.item[i].enclosure.url);
+				$(`#headPic_${i}`).html('<img src=' + picURL + '/>');
+		}
+			//Output description 
+			var descriptionData = JSON.stringify(data.rss.channel.item[i].description);
+
+			//delete " at Beginning and End of Desctiption
+			descriptionData = descriptionData.slice(1,-1);
+
+			//delete '/n'
+			descriptionData = descriptionData.replace(/\\n<p>/g, '<p>');
+
+			//delete 'style'
+			descriptionData = descriptionData.replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, '');
+
+			//delete '\' front of img source
+			descriptionData = descriptionData.replace(/(?<=src=)\\/g, '');
+
+			//delete '\' front of img source
+			descriptionData = descriptionData.replace(/(?<=src=)\\/g, '');
+
+			$(`#description_${i}`).html(descriptionData);
+		}
+	});
+</script>
