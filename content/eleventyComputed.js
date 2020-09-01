@@ -3,7 +3,7 @@
  * @param {*} data 
  */
 function tozanJoho(data) {
-  const allEntries = data.tozanJoho.entries
+  const allEntries = Object.values(data.tozanJoho)
     .map(parseDate)
     .sort(byDate)
     .reduce(groupByTrail, {
@@ -23,6 +23,7 @@ function tozanJoho(data) {
 function parseDate(entry) {
   const date = new Date(entry.date)
   
+  const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
 
@@ -32,7 +33,7 @@ function parseDate(entry) {
       '中旬' :
       '下旬'
 
-  const displayDate = `${month}月${jun}`
+  const displayDate = `${year}年${month}月${jun}`
 
   return {
     ...entry,

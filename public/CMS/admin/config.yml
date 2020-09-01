@@ -3,11 +3,11 @@ backend:
   repo: Asahidake/AsahidakeMApp
   branch: master
 
-# Allegedly doesn't work in local + Do we really need it?
-publish_mode: editorial_workflow
+# 編集のDraftなどのフローだけど、ローガルで使えなさそうなので、いらないかな？
+# publish_mode: editorial_workflow
 
 # For local dev
-# local_backend: true
+local_backend: true
 
 media_folder: "public/images/cms"
 public_folder: "images/cms"
@@ -30,29 +30,42 @@ collections:
       - {label: "Body", name: "body", widget: "markdown"}
   - label: "登山道情報"
     name: tozan-joho
-    files:
-      - label: "データ管理"
-        name: data
-        file: content/tozanJoho.json
-        fields:
-          - label: "登山道情報"
-            name: entries
-            widget: list
-            summary: "{{fields.trail}} - {{fields.date}}"
-            fields:
-              - label: "登山道"
-                name: trail
-                widget: select
-                options:
-                  - "旭岳山頂"
-                  - "裾合平・中岳温泉"
-                  - "天女が原"
-                  - "裏旭"
-              - label: "日付"
-                name: date
-                widget: datetime
-                dateFormat: "YYYY年MM月DD日"
-                timeFormat: false
-              - label: "画像データ"
-                name: src
-                widget: image
+    folder: "content/tozanJoho"
+    identifier_field: src
+    create: true
+    delete: true
+    format: json
+    editor:
+      preview: false
+    slug: "{{year}}{{month}}{{day}}-{{trail}}"
+    summary: "{{trail}} {{year}}年{{month}}月{{day}}日"
+    view_filters:
+      - label: "旭岳山頂"
+        field: trail
+        pattern: "旭岳山頂"
+      - label: "裾合平・中岳温泉"
+        field: trail
+        pattern: "裾合平・中岳温泉"
+      - label: "天女が原"
+        field: trail
+        pattern: "天女が原"
+      - label: "裏旭"
+        field: trail
+        pattern: "裏旭"
+    fields:
+      - label: "登山道"
+        name: trail
+        widget: select
+        options:
+          - "旭岳山頂"
+          - "裾合平・中岳温泉"
+          - "天女が原"
+          - "裏旭"
+      - label: "日付"
+        name: date
+        widget: datetime
+        dateFormat: "YYYY年MM月DD日"
+        timeFormat: false
+      - label: "画像データ"
+        name: src
+        widget: image

@@ -3,40 +3,10 @@
 	<div class="tile box is-vertical">
 		<h1 class="title is-1">登山道情報</h1>
 		<div class="tile">
-      <div class="tile is-parent">
-				<article class="tile is-12 is-child box">
-					<a  href="<%= tozanJoho.summit[0].src %>" target="_blank" rel="noopener noreferrer">
-						<h4 class="title is-4">旭岳山頂へ登山道</h4>
-						<time class="is-block subtitle" datetime="<%= tozanJoho.summit[0].date.toISOString() %>"><%= tozanJoho.summit[0].displayDate %></time>
-						<figure class="image is-hidden-touch">
-							<img id="picInfoPeak"src="<%= tozanJoho.summit[0].src %>" >
-						</figure>
-					</a>
-				</article>
-			</div>
-			<div class="tile is-parent">
-				<article class="tile is-12 is-child box">
-					<a  href="<%= tozanJoho.nakadake[0].src %>" target="_blank" rel="noopener noreferrer">
-					<h4 class="title is-4">裾合平中岳温泉</h4>
-					<time class="is-block subtitle" datetime="<%= tozanJoho.nakadake[0].date.toISOString() %>"><%= tozanJoho.nakadake[0].displayDate %></time>
-					<figure class="image is-hidden-touch">
-						<img id="picInfoSusoai" src="<%= tozanJoho.nakadake[0].src %>" >
-					</figure>
-				</article>
-			</div>
-			<div class="tile is-parent">
-				<a  href="<%= tozanJoho.tennyogahara[0].src %>" target="_blank" rel="noopener noreferrer">
-					<article class="tile is-12 is-child box">
-						<h4 class="title is-4">天女が原登山道</h4>
-						<time class="is-block subtitle" datetime="<%= tozanJoho.tennyogahara[0].date.toISOString() %>"><%= tozanJoho.tennyogahara[0].displayDate %></time>
-						<figure class="image is-hidden-touch">
-							<img id="picInfoGezan" src="<%= tozanJoho.tennyogahara[0].src %>" >
-						</figure>
-					</article>
-				</a>
-			</div>
+      <%- include('_includes/tozan-tile.ejs', { title: '旭岳山頂へ登山道', entries: tozanJoho.summit }); %>
+			<%- include('_includes/tozan-tile.ejs', { title: '裾合平中岳温泉', entries: tozanJoho.nakadake }); %>
+			<%- include('_includes/tozan-tile.ejs', { title: '天女が原登山道', entries: tozanJoho.tennyogahara }); %>
 		</div>
-		<a  href="pastTrailInfo.html" target="_blank" rel="noopener noreferrer">過去の登山情報はこちら</a>
 	</div>
 
 	<div class="tile">
