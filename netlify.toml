@@ -15,6 +15,6 @@
     # All the feeds we wish to gather for use in the build
   
     [[plugins.inputs.feeds]]
-      name = "KanshiinBlogaa"
+      name = "KanshiinBlog"
       url = "https://blog.goo.ne.jp/2291yamaiku/rss2.xml"
       ttl = 1

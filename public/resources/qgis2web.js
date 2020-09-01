@@ -194,11 +194,14 @@ onClick('about6hLoop',function(){
 onClick('info',function(){
     pushStateAndLoad('info');
     // $("html,body").animate({scrollTop:position},600);
-
 });
 
 onClick('aboutDaisetsuzanGrade',function(){
     pushStateAndLoad('aboutDaisetsuzanGrade');
+});
+
+onClick('blog',function(){
+    pushStateAndLoad('blog');
 });
 
 //写真レイヤーグループの中のVisible写真

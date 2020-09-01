@@ -6,7 +6,8 @@ function loadURL(state){
                         'aboutTrailToPeak',
                         'info',
                         'aboutDaisetsuzanGrade',
-                        "jremey'sMap"];
+                        "jremey'sMap",
+                        "blog"];
     var isLoaded = false;
 
     if(state == null ){
