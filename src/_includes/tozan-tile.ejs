@@ -1,5 +1,5 @@
 <% if (Array.isArray(entries) && entries.length > 0) { %>
-<div class="tile is-parent">
+<div class="tile is-parent is-vertical">
   <article class="tile is-12 is-child box">
     <a  href="<%= entries[0].src %>" target="_blank" rel="noopener noreferrer">
       <h4 class="title is-4"><%= title %></h4>
@@ -9,7 +9,7 @@
       </figure>
     </a>
     <% if (entries.length > 1) { %>
-    <details>
+    <details class="tile past-joho">
       <summary>過去の登山情報</summary>
       <ul>
         <% for (let entry of entries.slice(1)) { %>

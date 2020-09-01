@@ -1,10 +1,22 @@
 <!-- このデータは自動作成、編集は../src/info.ejsで-->
-<div class="tile is-ancestor is-vertical">
-	<div class="tile box is-vertical">
-		<h1 class="title is-1">登山道情報</h1>
-		<div class="tile">
-      
-<div class="tile is-parent">
+
+<style type="text/css">
+details.past-joho[open] li {
+  animation: expand .2s ease-in-out;
+}
+
+@keyframes expand {
+  0%    {opacity: 0; height: 0;}
+  100%  {opacity: 1; height: 1.5em;}
+}
+</style>
+<div class="container">
+	<h1 class="title is-1">登山道情報</h1>
+</div>
+<div class="container">
+	<div class="tile is-parent">
+		
+<div class="tile is-parent is-vertical">
   <article class="tile is-12 is-child box">
     <a  href="images/cms/200705-山頂登山道情報-日本語.jpg" target="_blank" rel="noopener noreferrer">
       <h4 class="title is-4">旭岳山頂へ登山道</h4>
@@ -14,11 +26,9 @@
       </figure>
     </a>
     
-    <details>
+    <details class="tile past-joho">
       <summary>過去の登山情報</summary>
       <ul>
-        
-        <li><a  href="images/cms/旭岳山頂_06142020.jpg" target="_blank" rel="noopener noreferrer">2020年6月中旬</a></li>
         
         <li><a  href="images/cms/旭岳山頂_06142020.jpg" target="_blank" rel="noopener noreferrer">2020年6月中旬</a></li>
         
@@ -28,26 +38,22 @@
   </article>
 </div>
 
-			
-<div class="tile is-parent">
+		
+<div class="tile is-parent is-vertical">
   <article class="tile is-12 is-child box">
     <a  href="images/cms/200824-中岳温泉登山道情報-日本語版.jpg" target="_blank" rel="noopener noreferrer">
       <h4 class="title is-4">裾合平中岳温泉</h4>
-      <time class="is-block subtitle" datetime="2020-08-24T01:12:20.205Z">2020年8月下旬</time>
+      <time class="is-block subtitle" datetime="2020-08-24T00:45:00.300Z">2020年8月下旬</time>
       <figure class="image is-hidden-touch">
         <img id="picInfoPeak"src="images/cms/200824-中岳温泉登山道情報-日本語版.jpg" >
       </figure>
     </a>
     
-    <details>
+    <details class="tile past-joho">
       <summary>過去の登山情報</summary>
       <ul>
         
-        <li><a  href="images/cms/200824-中岳温泉登山道情報-日本語版.jpg" target="_blank" rel="noopener noreferrer">2020年8月下旬</a></li>
-        
         <li><a  href="images/cms/裾合平中岳温泉_07302020.jpg" target="_blank" rel="noopener noreferrer">2020年7月下旬</a></li>
-        
-        <li><a  href="images/cms/裾合平中岳温泉_07042020.jpg" target="_blank" rel="noopener noreferrer">2020年7月初旬</a></li>
         
         <li><a  href="images/cms/裾合平中岳温泉_07042020.jpg" target="_blank" rel="noopener noreferrer">2020年7月初旬</a></li>
         
@@ -57,8 +63,8 @@
   </article>
 </div>
 
-			
-<div class="tile is-parent">
+		
+<div class="tile is-parent is-vertical">
   <article class="tile is-12 is-child box">
     <a  href="images/cms/200813-天女ヶ原登山道情報-日本語版.jpg" target="_blank" rel="noopener noreferrer">
       <h4 class="title is-4">天女が原登山道</h4>
@@ -68,13 +74,11 @@
       </figure>
     </a>
     
-    <details>
+    <details class="tile past-joho">
       <summary>過去の登山情報</summary>
       <ul>
         
         <li><a  href="images/cms/天女ヶ原_07272020.jpg" target="_blank" rel="noopener noreferrer">2020年7月下旬</a></li>
-        
-        <li><a  href="images/cms/天女ヶ原_07092020.jpg" target="_blank" rel="noopener noreferrer">2020年7月初旬</a></li>
         
         <li><a  href="images/cms/天女ヶ原_07092020.jpg" target="_blank" rel="noopener noreferrer">2020年7月初旬</a></li>
         
@@ -84,7 +88,6 @@
   </article>
 </div>
 
-		</div>
 	</div>
 
 	<div class="tile">
