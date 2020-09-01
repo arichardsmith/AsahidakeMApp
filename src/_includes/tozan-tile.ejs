@@ -1,0 +1,23 @@
+<% if (Array.isArray(entries) && entries.length > 0) { %>
+<div class="tile is-parent is-vertical">
+  <article class="tile is-12 is-child box">
+    <a  href="<%= entries[0].src %>" target="_blank" rel="noopener noreferrer">
+      <h4 class="title is-4"><%= title %></h4>
+      <time class="is-block subtitle" datetime="<%= entries[0].date.toISOString() %>"><%= entries[0].displayDate %></time>
+      <figure class="image is-hidden-touch">
+        <img id="picInfoPeak"src="<%= entries[0].src %>" >
+      </figure>
+    </a>
+    <% if (entries.length > 1) { %>
+    <details class="tile past-joho">
+      <summary>過去の登山情報</summary>
+      <ul>
+        <% for (let entry of entries.slice(1)) { %>
+        <li><a  href="<%= entry.src %>" target="_blank" rel="noopener noreferrer"><%= entry.displayDate %></a></li>
+        <% } // end-for %>
+      </ul>
+    </details>
+    <% } // end-if %>
+  </article>
+</div>
+<% } // end-if %>
