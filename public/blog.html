@@ -1,6 +1,5 @@
 <!-- <script src="resources/jquery-3.5.1.min.js"></script> -->
 
-
 <style>
 .readmore{
     position: relative;
@@ -136,10 +135,8 @@
 			descriptionData = descriptionData.replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, '');
 
 			//delete '\' front of img source
-			descriptionData = descriptionData.replace(/(?<=src=)\\/g, '');
+			descriptionData = descriptionData.replace(/(src=)\\/g, 'src=');
 
-			//delete '\' front of img source
-			descriptionData = descriptionData.replace(/(?<=src=)\\/g, '');
 
 			$(`#description_${i}`).html(descriptionData);
 		}
