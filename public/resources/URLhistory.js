@@ -38,5 +38,17 @@ function pushStateAndLoad(pageName) {
     console.dir('pushStateAndLoad');
 	window.history.pushState({page : pageName}, null, '#/'+ pageName);
 	$("#column").load(pageName + '.html');
+
+    //hightlight trail which is muched the pages
+    switch (pageName){
+        case 'about6hLoop':
+            AsahidakeMap.highlight.loop();
+            break;
+        case 'aboutTrailToPeak':
+            AsahidakeMap.highlight.summit();
+            break;
+        default :
+            AsahidakeMap.highlight.clear();
+    }
 };
 

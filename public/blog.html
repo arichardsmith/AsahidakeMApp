@@ -39,7 +39,7 @@
     left: 50%;
     transform: translateX(-50%);
     -webkit-transform: translateX(-50%);
-    /*margin: 0 auto;*/
+    margin: 0 auto;
     z-index: 2;
     /*padding: 0 10px;*/
     /*background-color: #ff7777;*/
@@ -77,8 +77,11 @@
 <div class="column is-8 is-offset-2">
 	<h1 class="title is-1">監視員ブログ</h1>
 </div>
- <div class="column is-8 is-offset-2" id="items">
- </div>
+	<div class="column is-8 is-offset-2" id="items">
+</div>
+<div class="column is-8 is-offset-2">
+	<a class = 'is-size-4' href = 'https://blog.goo.ne.jp/2291yamaiku'> 過去のブログはこちら</a>
+</div>
 
 <script>
 	$.getJSON('./CMS/KanshiinBlog.json', (data) => {
@@ -91,7 +94,7 @@
 			 				<input id="moreButton_${i}" class="readmore-check" type="checkbox">
 			 				<div class="card-content readmore-content">
 			 					<div class="media-content has-text-centered">
-			 					<a id="date_${i}"></a>
+			 					<p id="date_${i}"></p>
 				 					<h1 class="title is-size-4" id="headTitle_${i}"></h1>
 				 					<div  id="headPic_${i}"></div>
 				 				</div>

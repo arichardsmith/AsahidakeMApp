@@ -17,4 +17,4 @@
     [[plugins.inputs.feeds]]
       name = "KanshiinBlog"
       url = "https://blog.goo.ne.jp/2291yamaiku/rss2.xml"
-      ttl = 1
+      ttl = 180
