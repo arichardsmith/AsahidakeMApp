@@ -377,7 +377,7 @@ var AsahidakeMap = (function (exports) {
   const SugatamiLayer = createPhotoLayer({
     source: 'sugatami.json',
     title: '姿見の池園地内',
-    color: 'rgba(33,153,31,1)'
+    color: 'rgba(6,63,252,1)'
   });
 
   const photoLayers = [
