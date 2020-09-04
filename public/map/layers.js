@@ -374,11 +374,18 @@ var AsahidakeMap = (function (exports) {
     color: 'rgba(33,153,31,1)'
   });
 
+  const SugatamiLayer = createPhotoLayer({
+    source: 'sugatami.json',
+    title: '姿見の池園地内',
+    color: 'rgba(33,153,31,1)'
+  });
+
   const photoLayers = [
     tennyogaLayer,
     loopLayer,
     nakadakeLayer,
-    summitLayer
+    summitLayer,
+    SugatamiLayer
   ];
 
   const photoLocations = new Map();
