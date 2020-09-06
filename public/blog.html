@@ -134,9 +134,8 @@
 			//delete 'style'
 			descriptionData = descriptionData.replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, '');
 
-			//delete '\' front of img source
-			descriptionData = descriptionData.replace(/(?<!\\)\\(?!\\)/g, '');
-			descriptionData = descriptionData.replace(/\\\\/g, '\\');
+			//delete '\' 
+			descriptionData = descriptionData.replace(/(\\/g, '');
 
 
 			$(`#description_${i}`).html(descriptionData);
