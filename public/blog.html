@@ -135,7 +135,7 @@
 			descriptionData = descriptionData.replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, '');
 
 			//delete '\' 
-			descriptionData = descriptionData.replace(/(\\/g, ''));
+			descriptionData = descriptionData.replace(/\\/g, '');
 
 
 			$(`#description_${i}`).html(descriptionData);
