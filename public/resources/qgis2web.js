@@ -172,7 +172,7 @@ function onClick(id, callback) {
 }
 //各ボタンの処理
 onClick('aboutDaisetsuzan', function() {
-    fitView('sugatami');
+   fitView('loop');
     pushStateAndLoad('aboutDaisetsuzan');
 });
 
@@ -203,6 +203,7 @@ onClick('aboutDaisetsuzanGrade',function(){
 onClick('blog',function(){
     pushStateAndLoad('blog');
 });
+
 
 //写真レイヤーグループの中のVisible写真
 function getVisiblePhotos () {

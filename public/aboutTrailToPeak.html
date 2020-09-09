@@ -1,9 +1,20 @@
+
+
 <div class="container">
 	<h1 class="title is-1">旭岳山頂コース</h1>
     <h5 class="subtitle is-5">標準コースタイム : 4時間</h5>
-    <h5 class="subtitle is-5">大雪山グレード : 3 『大雪山の自然を体感する登山ルート』</h5>
-    <a>最新登山道情報はこちら</a>
+    <span class="subtitle is-5" style='background-color:#feed00;'>大雪山グレード : 3 『大雪山の自然を体感する登山ルート』</span>
+    <a id='gradeLink'>大雪山グレードとは</a><br/>
+    <a id='infoLink'>最新登山道情報はこちら</a>
 </div>
+<script>
+	document.getElementById('infoLink').addEventListener('click', function(){
+		pushStateAndLoad('info');
+	});
+	document.getElementById('gradeLink').addEventListener('click', function(){
+		pushStateAndLoad('aboutDaisetsuzanGrade');
+	});
+</script>
 
 <div class="container px-6">
 	<div class="tile is-ancestor is-vertical">

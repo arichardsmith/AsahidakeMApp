@@ -3,12 +3,14 @@ var AsahidakeMap = (function (exports) {
 
   const baseSource = {
     url: '/map/tiles/{z}/{x}/{y}.png',
-    tilePixelRatio: 1
+    tilePixelRatio: 1,
+    attributions: '(測量法に基づく国土地理院長承認（使用）R 2JHs 394)'
   };
 
   const retinaSource = {
     url: '/map/tiles/2x/{z}/{x}/{y}.png',
-    tilePixelRatio: 2
+    tilePixelRatio: 2,
+    attributions: '(測量法に基づく国土地理院長承認（使用）R 2JHs 394)'
   };
 
   const isRetina = window.matchMedia('(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)').matches;
@@ -182,7 +184,8 @@ var AsahidakeMap = (function (exports) {
       .then(base => base.trails[gradeKey]);
 
     connectGeoJSONSource(layer, features, {
-      attributions: '<a href="http://www.daisetsuzan.or.jp/">大雪山国立公園連絡協議会</a>'
+
+      attributions: '<a href="http://www.daisetsuzan.or.jp/">(大雪山国立公園連絡協議会)</a>'
     });
 
     return layer
