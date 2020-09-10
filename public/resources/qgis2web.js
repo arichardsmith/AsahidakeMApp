@@ -306,6 +306,39 @@ function handleMapPointer(evt) {
     }
 }
 
+//Show HowToUShowPicOnMap
+function showHowTo(){
+    let cookies_get = document.cookie.split(";");
+    if(cookies_get.indexOf("KiaOla=Hai") == -1 ){
+
+        const visiblePhotos = getVisiblePhotos();
+        if(visiblePhotos != null){
+            const imgSource = `/images/MapPics/${visiblePhotos[0]}`;
+            const point = AsahidakeMap.photoLocations.get(imgSource);
+            //showPopup(imgSource,point);
+
+            const HTML =    `<br/>
+                            <h1 style='font-size:16px;color:#3273DC;'>【写真の表示方法】</h1>
+                            <div>
+                            <p>①地図の下にある写真の一覧の中からクリック</p>
+                            <p>②地図上にある丸いプロットをクリック</p>
+                            </div>
+                            `;
+            content.innerHTML = HTML;
+            overlayPopup.setPosition(point);
+        
+            container.style.display = 'block';
+        
+            overlayPopup.panIntoView({
+                margin: 20
+            });
+        }
+        document.cookie = "KiaOla=Hai; max-age=86400;";
+    }
+
+}
+AsahidakeMap.onPhotosLoad(showHowTo); // 写真レイヤーロード後
+
 // マウスポインター動の場合は'click'の代わりに'pointermove'
 map.on('click', handleMapPointer);
 
