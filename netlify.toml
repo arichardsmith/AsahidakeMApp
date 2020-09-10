@@ -6,7 +6,7 @@
 
 # Config for the Netlify Build Plugin: netlify-plugin-fetch-feeds
 [[plugins]]
-  package = "netlify-plugin-fetch-feeds"
+  package = "/plugins/rss"
 
   [plugins.inputs]
     # Where should data files reside
@@ -18,3 +18,5 @@
       name = "KanshiinBlog"
       url = "https://blog.goo.ne.jp/2291yamaiku/rss2.xml"
       ttl = 180
+      retries = 3 # Max attempts
+      retryDelay = 10 # Seconds. Exponentially backs off
