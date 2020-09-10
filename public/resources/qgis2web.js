@@ -311,7 +311,7 @@ function showHowTo(){
     let cookies_get = document.cookie.split(";");
     if(cookies_get.indexOf("KiaOla=Hai") == -1 ){
 
-        const visiblePhotos = getVisiblePhotos();
+        const visiblePhotos = getVisiblePhotos().reverse();
         if(visiblePhotos != null){
             const imgSource = `/images/MapPics/${visiblePhotos[0]}`;
             const point = AsahidakeMap.photoLocations.get(imgSource);
