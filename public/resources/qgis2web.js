@@ -177,17 +177,17 @@ onClick('aboutDaisetsuzan', function() {
 });
 
 onClick('aboutSugatami', function() {
-    fitView('sugatami');
+    //fitView('sugatami');
     pushStateAndLoad('aboutSugatami');
 });
 
 onClick('aboutTrailToPeak',function(){
-    fitView('summit');
+    //fitView('summit');
     pushStateAndLoad('aboutTrailToPeak');
 });
 
 onClick('about6hLoop',function(){
-    fitView('loop');
+    //fitView('loop');
     pushStateAndLoad('about6hLoop');
 });
 

@@ -11,17 +11,18 @@ function loadURL(state){
     var isLoaded = false;
 
     if(state == null ){
-        $("#column").load("aboutSugatami.html");
+        pushStateAndLoad('aboutSugatami');
     }else{
         for(var k in index_pages){
             if(state == index_pages[k]){
-                $("#column").load(index_pages[k] + ".html");
+                pushStateAndLoad(index_pages[k]);
+                //$("#column").load(index_pages[k] + ".html");
                 isLoaded = true;
                 break;
             }
         }
         if(!isLoaded){
-            $("#column").load("aboutSugatami.html");
+            pushStateAndLoad('aboutSugatami');
         }
     }
 }
@@ -37,18 +38,23 @@ function pushStateAndLoad(pageName) {
 	$("#column").load(pageName + '.html');
 
     //hightlight trail which is muched the pages
-    switch (pageName){
-        case 'about6hLoop':
-            AsahidakeMap.highlight.loop();
-            break;
-        case 'aboutTrailToPeak':
-            AsahidakeMap.highlight.summit();
-            break;
-        case 'aboutSugatami':
-            AsahidakeMap.highlight.sugatami();
-            break;
-        default :
-            AsahidakeMap.highlight.clear();
-    }
+    $(function() {
+        switch (pageName){
+            case 'about6hLoop':
+                fitView('loop');
+                AsahidakeMap.highlight.loop();
+                break;
+            case 'aboutTrailToPeak':
+                fitView('summit');
+                AsahidakeMap.highlight.summit();
+                break;
+            case 'aboutSugatami':
+                fitView('sugatami');
+                AsahidakeMap.highlight.sugatami();
+                break;
+            default :
+                AsahidakeMap.highlight.clear();
+        }
+    });
 };
 
