@@ -16,7 +16,6 @@ function loadURL(state){
         for(var k in index_pages){
             if(state == index_pages[k]){
                 pushStateAndLoad(index_pages[k]);
-                //$("#column").load(index_pages[k] + ".html");
                 isLoaded = true;
                 break;
             }

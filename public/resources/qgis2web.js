@@ -177,23 +177,19 @@ onClick('aboutDaisetsuzan', function() {
 });
 
 onClick('aboutSugatami', function() {
-    //fitView('sugatami');
     pushStateAndLoad('aboutSugatami');
 });
 
 onClick('aboutTrailToPeak',function(){
-    //fitView('summit');
     pushStateAndLoad('aboutTrailToPeak');
 });
 
 onClick('about6hLoop',function(){
-    //fitView('loop');
     pushStateAndLoad('about6hLoop');
 });
 
 onClick('info',function(){
     pushStateAndLoad('info');
-    // $("html,body").animate({scrollTop:position},600);
 });
 
 onClick('aboutDaisetsuzanGrade',function(){
