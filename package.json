@@ -29,7 +29,7 @@
     "eleventy:build": "eleventy",
     "cms:dev": "netlify-cms-proxy-server",
     "start": "run-p eleventy:dev cms:dev gulp:watch",
-    "build": "run-p eleventy gulp:build",
+    "build": "run-p eleventy:build gulp:build",
     "gulp:watch": "gulp watch",
     "gulp:build": "gulp build"
   },
