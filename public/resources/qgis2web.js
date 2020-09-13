@@ -304,7 +304,10 @@ function handleMapPointer(evt) {
 
 //Show HowToUShowPicOnMap
 function showHowTo(){
-    let cookies_get = document.cookie.split(";");
+    var  cookies_get = document.cookie.split(";").map(function(item){
+        return item.trim();
+    });
+
     if(cookies_get.indexOf("KiaOla=Hai") == -1 ){
 
         const visiblePhotos = getVisiblePhotos().reverse();
