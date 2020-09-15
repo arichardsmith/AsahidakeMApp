@@ -15,14 +15,27 @@
   "homepage": "https://github.com/arichardsmith/AsahidakeMApp#readme",
   "devDependencies": {
     "@11ty/eleventy": "^0.11.0",
+    "@rollup/plugin-commonjs": "^15.0.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "gulp": "^4.0.2",
     "netlify-cms-proxy-server": "^1.3.2",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.1.1",
+    "rollup": "^2.26.11",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "scripts": {
     "eleventy:dev": "eleventy --serve --input=src --output=public",
     "eleventy:build": "eleventy",
     "cms:dev": "netlify-cms-proxy-server",
-    "start": "run-p eleventy:dev cms:dev",
-    "build": "eleventy"
+    "start": "run-p eleventy:dev cms:dev gulp:watch",
+    "build": "run-p eleventy:build gulp:build",
+    "gulp:watch": "gulp watch",
+    "gulp:build": "gulp build"
+  },
+  "dependencies": {
+    "jquery": "^3.5.1",
+    "ol": "^6.4.3",
+    "ol-layerswitcher": "^3.6.0"
   }
 }
