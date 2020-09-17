@@ -1,8 +1,22 @@
+const { src, dest, parallel, watch } = require('gulp');
 const { resolve } = require('path');
-const { rollup, watch } = require('rollup');
+
+const sourcemaps = require('gulp-sourcemaps');
+
+// JS
+const { rollup, watch: rollupWatch } = require('rollup');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const { terser } = require('rollup-plugin-terser');
+
+// CSS
+const sass = require('gulp-sass');
+const sassPackageImporter = require('node-sass-package-importer');
+const postCSS = require('gulp-postcss');
+const autoprefix = require('autoprefixer');
+const cssNano = require('cssnano');
+
+sass.compiler = require('node-sass');
 
 const r = (...path) => resolve(__dirname, ...path);
 
@@ -40,9 +54,9 @@ async function buildJS() {
   return await Promise.all(buildTasks);
 }
 
-function watchJS(cb) {
+function watchJS() {
   for (let moduleName in JS_CONFIG) {
-    watch({
+    rollupWatch({
       input: JS_CONFIG[moduleName].input,
       plugins: [nodeResolve(), commonjs(), terser()],
       context: 'this',
@@ -58,5 +72,21 @@ function watchJS(cb) {
   }
 }
 
-exports.build = buildJS;
-exports.watch = watchJS;
+function buildCSS() {
+  const plugins = [autoprefix(), cssNano()];
+
+  return src('CSS/index.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({ importer: sassPackageImporter() }).on('error', sass.logError))
+    .pipe(postCSS(plugins))
+    .pipe(sourcemaps.write('./'))
+    .pipe(dest('public/assets/'));
+}
+
+function watchCSS() {
+  watch(['CSS/**/*.css', 'CSS/**/*.scss', 'CSS/**/*.sass'], buildCSS);
+}
+
+exports.buildCSS = buildCSS;
+exports.build = parallel(buildJS, buildCSS);
+exports.watch = parallel(watchJS, watchCSS);
