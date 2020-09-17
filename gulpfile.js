@@ -58,6 +58,7 @@ function watchJS() {
   for (let moduleName in JS_CONFIG) {
     rollupWatch({
       input: JS_CONFIG[moduleName].input,
+      external: ['jquery'],
       plugins: [nodeResolve(), commonjs(), terser()],
       context: 'this',
       output: [
@@ -66,6 +67,9 @@ function watchJS() {
           format: 'iife',
           name: moduleName,
           sourcemap: true,
+          globals: {
+            jquery: '$',
+          },
         },
       ],
     });
