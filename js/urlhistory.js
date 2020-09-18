@@ -101,8 +101,9 @@ for (let element of navElements) {
 }
 
 window.onpopstate = function () {
-  console.dir('onpopstate  state:' + history.state.page);
-  doNav(history.state.page);
+  const page = history.state !== null ? history.state.page : null;
+  console.dir('onpopstate  state:' + page);
+  doNav(page);
 };
 
 doNav(document.location.hash.substring(2));

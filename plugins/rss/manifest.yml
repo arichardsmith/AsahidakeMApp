@@ -1,0 +1,6 @@
+name: kanshiin-rss
+inputs:
+  - name: dataDir
+    required: true
+  - name: feeds
+    required: true

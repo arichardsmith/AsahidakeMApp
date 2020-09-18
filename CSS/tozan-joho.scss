@@ -1,0 +1,20 @@
+/**
+ * 登山道情報ページのstyles
+ */
+details.past-joho[open] li {
+  animation: expand 0.2s ease-in-out;
+}
+
+@keyframes expand {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+  100% {
+    opacity: 1;
+    height: 1.5em;
+  }
+}
+summary {
+  cursor: pointer;
+}
