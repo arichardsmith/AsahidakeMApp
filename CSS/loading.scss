@@ -1,0 +1,24 @@
+#loader {
+  height: 0;
+  visibility: hidden;
+  overflow: hidden;
+
+  transition: height 0.2s ease-in-out;
+}
+
+#loader.visible {
+  visibility: visible;
+  height: 10em; /* Could be better...*/
+}
+
+#loader .message {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+#loader progress {
+  margin-top: 1em;
+}
+
+#loader.visible ~ #column {
+  opacity: 0.6;
+}

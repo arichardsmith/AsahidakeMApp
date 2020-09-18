@@ -89,8 +89,16 @@
             <!-- ここに写真読み込まれる。 -->
         </div>
     </div>
-
-    <section class="section has-background-link-light" id="column">
+    <section class="section has-background-link-light">
+        <div class="container" id="loader">
+            <div class="message">
+                <div class="message-body">
+                    <p class="message-text is-size-5">読み込み中</p>
+                    <progress class="progress is-small is-info"></progress>
+                </div>
+            </div>
+        </div>
+        <div id="column"></div>
         <!-- ここに記事読み込まれる。 -->
     </section>
     <footer class="footer">
