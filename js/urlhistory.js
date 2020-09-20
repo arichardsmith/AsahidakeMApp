@@ -111,15 +111,10 @@ window.onpopstate = function () {
 
 doNav(document.location.hash.substring(2));
 
-let spinnerTimer;
 $(document).ajaxStart(() => {
-  spinnerTimer = setTimeout(() => NProgress.start(), 100);
+  NProgress.start();
 });
 
 $(document).ajaxStop(() => {
-  clearTimeout(spinnerTimer);
-
-  if (NProgress.isStarted()) {
-    NProgress.done();
-  }
+  NProgress.done();
 });

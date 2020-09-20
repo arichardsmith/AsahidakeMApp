@@ -1,3 +1,5 @@
+$progress-color: rgb(255, 202, 0);
+
 /* Make clicks pass-through */
 #nprogress {
   pointer-events: none;
@@ -34,7 +36,9 @@
   position: fixed;
   z-index: 1031;
   top: 15px;
-  left: 15px;
+  top: calc(1.625rem - 9px);
+  left: 30px;
+  left: 14ch;
   opacity: 0;
   animation: show-spinner 400ms linear forwards;
   animation-delay: 500ms;
