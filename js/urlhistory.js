@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import NProgress from 'nprogress';
+
 import { loadURL } from './nav/loading.js';
 import { fitView, highlightTrail } from './nav/map-control.js';
 /**
@@ -107,3 +110,11 @@ window.onpopstate = function () {
 };
 
 doNav(document.location.hash.substring(2));
+
+$(document).ajaxStart(() => {
+  NProgress.start();
+});
+
+$(document).ajaxStop(() => {
+  NProgress.done();
+});
