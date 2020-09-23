@@ -87,57 +87,31 @@
 		//make div block
 		//box
 		var htmlStr ="";
-		for(var i in data.rss.channel.item){
-			 htmlStr += `<div class="card article has-background-white-bis" id="item_${i}">
-			 				<input id="moreButton_${i}" class="readmore-check" type="checkbox">
+		for(let post of data.posts){
+			let headPic = ''
+			if (post.headPic !== null) {
+				headPic = `<div  id="headPic_${post.id}"><img src="${post.headPic}" /></div>`
+			}
+
+			const dateObj = new Date(post.date);
+			const weeks = ['日', '月', '火', '水', '木', '金', '土'];
+			const date = `${dateObj.getFullYear()}年 ${
+				dateObj.getMonth() + 1
+			}月 ${dateObj.getDate()}日 ${weeks[dateObj.getDay()]}曜日`;
+
+			 htmlStr += `<div class="card article has-background-white-bis" id="item_${post.id}">
+			 				<input id="moreButton_${post.id}" class="readmore-check" type="checkbox">
 			 				<div class="card-content readmore-content">
 			 					<div class="media-content has-text-centered">
-			 					<p id="date_${i}"></p>
-				 					<h1 class="title is-size-4" id="headTitle_${i}"></h1>
-				 					<div  id="headPic_${i}"></div>
+			 					<p id="date_${post.id}">${date}</p>
+				 					<h1 class="title is-size-4" id="headTitle_${post.id}">${post.title}</h1>
+				 					${headPic}
 				 				</div>
-				 				<div class="content article-body " style="margin:2% 5%; text-align : center;" id="description_${i}" ></div>
+				 				<div class="content article-body " style="margin:2% 5%; text-align : center;" id="description_${post.id}" >${post.description}</div>
  						</div>
- 						<label class="readmore-label button is-link is-light" for="moreButton_${i}"></label>
+ 						<label class="readmore-label button is-link is-light" for="moreButton_${post.id}"></label>
 						</div><br/>`;
 		}
 		$("#items").html(htmlStr);
-
-		for(var i in data.rss.channel.item){
-			//Output Date
-			var date = new Date(Date.parse(data.rss.channel.item[i]["dc:date"]));
-			var weeks = ["日", "月", "火", "水", "木", "金", "土"];
-			var date = `${date.getFullYear()}年 ${date.getMonth()+1}月 ${date.getDate()}日 ${weeks[date.getDay()]}曜日`;
-			console.dir(date);
-			$(`#date_${i}`).html(date);
-			
-
-
-			//Output Title
-			$(`#headTitle_${i}`).html( JSON.stringify(data.rss.channel.item[i].title).slice(1,-1) );
-
-			//Output head pic
-			if (data.rss.channel.item[i].enclosure != null){
-				var picURL = JSON.stringify(data.rss.channel.item[i].enclosure.url);
-				$(`#headPic_${i}`).html('<img src=' + picURL + '/>');
-		}
-			//Output description 
-			var descriptionData = JSON.stringify(data.rss.channel.item[i].description);
-
-			//delete " at Beginning and End of Desctiption
-			descriptionData = descriptionData.slice(1,-1);
-
-			//delete '/n'
-			descriptionData = descriptionData.replace(/\\n<p>/g, '<p>');
-
-			//delete 'style'
-			descriptionData = descriptionData.replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, '');
-
-			//delete '\' 
-			descriptionData = descriptionData.replace(/\\/g, '');
-
-
-			$(`#description_${i}`).html(descriptionData);
-		}
 	});
 </script>

@@ -2,8 +2,10 @@ const { promisify } = require('util');
 const writeFile = promisify(require('fs').writeFile);
 
 const fetch = require('node-fetch');
-const parser = require('xml2json');
+const RSSParser = require('rss-parser');
 const c = require('ansi-colors');
+
+const rss = new RSSParser();
 
 /**
  * Edited version of https://github.com/philhawksworth/netlify-plugin-fetch-feeds/blob/master/index.js
@@ -58,7 +60,7 @@ async function processFeed(feed, inputs, utils) {
 
     for (let i = 1; i <= tries; i++) {
       try {
-        json = await doLoad(feed.url);
+        json = await loadFeed(feed.url);
         break; // Stop looping early
       } catch (err) {
         const time = Math.round((Date.now() - start) / 1000);
@@ -100,36 +102,29 @@ async function processFeed(feed, inputs, utils) {
  * Attempt to load a feed
  * @param {string} url - Url of feed
  */
-async function doLoad(url) {
-  let res;
-
+async function loadFeed(url) {
+  let feedXML;
   try {
-    res = await fetch(url);
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`${c.red(res.statusCode)}: ${res.statusText}`);
+    }
+    feedXML = await res.text();
   } catch (err) {
-    console.warn(
-      c.yellow('Warning:'),
-      `Failed to fetch feed from ${url}. The following error occured:`
-    );
-    console.log(err);
+    console.warn(`${c.yellow('Warning')}: Error reading blog feed`);
     throw err;
   }
 
-  const contentType = res.headers.get('content-type');
-  if (/application\/json/i.test(contentType)) {
-    return res.json();
-  } else {
-    const content = await res.text();
-    try {
-      const json = parser.toJson(content, { object: true });
-      return json;
-    } catch (err) {
-      console.warn(
-        c.yellow('Warning:'),
-        `Failed to parse feed at ${feed.url}. The following error occured:`
-      );
-      console.log(err);
-      throw err;
-    }
+  try {
+    const feed = await rss.parseString(feedXML);
+    const posts = feed.items.map(parseItem);
+    return {
+      posts,
+    };
+  } catch (err) {
+    console.log(feedXML);
+    console.warn(`${c.yellow('Warning')}: Error parsing blog feed`);
+    throw err;
   }
 }
 
@@ -139,4 +134,28 @@ async function doLoad(url) {
  */
 function wait(ms) {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
+}
+
+/**
+ * Format an individual post for use in blog template
+ * @param {*} post - Post data from feed
+ */
+function parseItem(post, i) {
+  let headPic = null;
+  if (post.enclosure !== undefined && post.enclosure.url !== undefined) {
+    headPic = post.enclosure.url;
+  }
+
+  const description = post.content
+    .replace(/\\n<p>/g, '<p>') //delete '/n'
+    .replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, '') //delete 'style'
+    .replace(/\\/g, ''); //delete '\'
+
+  return {
+    id: i,
+    date: post.isoDate,
+    title: post.title,
+    headPic,
+    description,
+  };
 }
