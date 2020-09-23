@@ -199,7 +199,10 @@ export function hidePopup() {
   return false;
 }
 
-closer.addEventListener('click', hidePopup);
+closer.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  hidePopup();
+});
 
 //Show HowToUShowPicOnMap
 function showHowTo() {
