@@ -3,3 +3,6 @@
 
 # Ignore node files
 node_modules
+
+# Ignore blog json (it's recreated every build)
+public/cms/KanshiinBlog.json

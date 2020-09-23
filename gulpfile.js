@@ -91,6 +91,33 @@ function watchCSS() {
   watch(['CSS/**/*.css', 'CSS/**/*.scss', 'CSS/**/*.sass'], buildCSS);
 }
 
+// RSS (for testing only)
+function runRSSPlugin() {
+  const plugin = require('./plugins/rss/index.js');
+  const inputs = {
+    dataDir: 'public/CMS',
+    feeds: [
+      {
+        name: 'KanshiinBlog',
+        url: 'https://blog.goo.ne.jp/2291yamaiku/rss2.xml',
+        ttl: 180,
+        retries: 3,
+        retryDelay: 10,
+      },
+    ],
+  };
+
+  const utils = {
+    cache: {
+      has: () => Promise.resolve(false),
+      save: () => Promise.resolve(true),
+    },
+  };
+
+  return plugin.onPreBuild({ inputs, utils });
+}
+
 exports.buildCSS = buildCSS;
 exports.build = parallel(buildJS, buildCSS);
-exports.watch = parallel(watchJS, watchCSS);
+exports.watch = parallel(watchJS, watchCSS, runRSSPlugin);
+exports.runRSS = runRSSPlugin;
