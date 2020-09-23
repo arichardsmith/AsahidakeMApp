@@ -118,3 +118,7 @@ $(document).ajaxStart(() => {
 $(document).ajaxStop(() => {
   NProgress.done();
 });
+
+$(document).ajaxError(() => {
+  NProgress.done();
+});
