@@ -100,7 +100,7 @@ function handlePhotoClick(e) {
   const imgSource = new URL(targetElement.src).pathname; // Extract path
   const point = getPhotoLocation(imgSource);
 
-  showPopup(imgSource, point);
+  showPopup(imgHTML(imgSource), point);
 }
 
 //写真HTML Template
@@ -139,7 +139,8 @@ function handleMapPointer(evt) {
 
   if (filteredImages.length > 0) {
     // クリックした写真Pointある
-    showPopup(filteredImages, coord);
+    const popupContent = filteredImages.map(imgHTML).join('');
+    showPopup(popupContent, coord);
   } else {
     hidePopup();
   }
@@ -170,20 +171,11 @@ function getVisiblePhotos() {
 
 /**
  * ポップアップ表示
- * @param {*} imgSrcs - 表示写真source
+ * @param {*} popupContent - popupで表示HTML
  * @param {*} coords - Pointの場所
  */
-export function showPopup(imgSrcs, coords) {
-  if (!Array.isArray(imgSrcs)) {
-    // 一つなら、Arrayに変化
-    imgSrcs = [imgSrcs];
-  }
-
-  const imgHtml = imgSrcs
-    .map(imgHTML) // HTML String変化
-    .join('');
-
-  content.innerHTML = imgHtml;
+export function showPopup(popupContent, coords) {
+  content.innerHTML = popupContent;
   overlayPopup.setPosition(coords);
 
   container.style.display = 'block';
@@ -221,14 +213,8 @@ function showHowTo() {
                           <p>②地図上にある丸いプロットをクリック</p>
                           </div>
                           `;
-      content.innerHTML = HTML;
-      overlayPopup.setPosition(point);
 
-      container.style.display = 'block';
-
-      overlayPopup.panIntoView({
-        margin: 20,
-      });
+      showPopup(HTML, point);
     }
     document.cookie = 'KiaOla=Hai; max-age=86400;';
   }
