@@ -7,7 +7,8 @@ function loadURL(state){
                         'info',
                         'aboutDaisetsuzanGrade',
                         "jremey'sMap",
-                        "blog"];
+                        "blog",
+                        "aboutSusoai"];
     var isLoaded = false;
 
     if(state == null ){
@@ -50,6 +51,10 @@ function pushStateAndLoad(pageName) {
             case 'aboutSugatami':
                 fitView('sugatami');
                 AsahidakeMap.highlight.sugatami();
+                break;
+            case 'aboutSusoai':
+                fitView('susoai');
+                AsahidakeMap.highlight.susoai();
                 break;
             default :
                 AsahidakeMap.highlight.clear();

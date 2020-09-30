@@ -32,6 +32,10 @@ export async function doNav(target) {
       await loadURL('#column', 'aboutDaisetsuzanGrade.html');
       highlightTrail(null);
       break;
+    case 'aboutSusoai':
+      await loadURL('#column', 'aboutSusoai.html');
+      highlightTrail(susoai);
+      break;
     case 'blog':
       await loadURL('#column', 'blog.html');
       highlightTrail(null);
@@ -73,6 +77,10 @@ onClick('aboutTrailToPeak', function () {
 
 onClick('about6hLoop', function () {
   pushStateAndNav('about6hLoop');
+});
+
+onClick('aboutSusoai', function () {
+  pushStateAndNav('aboutSusoai');
 });
 
 onClick('info', function () {

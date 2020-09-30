@@ -26,6 +26,11 @@ export async function doNav(target) {
       fitView('loop');
       highlightTrail('loop');
       break;
+    case 'aboutSusoai':
+      await loadURL('#column', 'aboutSusoai.html');
+      fitView('nakadake');
+      highlightTrail('nakadake');
+      break;
     case 'info':
       await loadURL('#column', 'info.html');
       highlightTrail(null);
@@ -75,6 +80,10 @@ onClick('aboutTrailToPeak', function () {
 
 onClick('about6hLoop', function () {
   pushStateAndNav('about6hLoop');
+});
+
+onClick('aboutSusoai', function () {
+  pushStateAndNav('aboutSusoai');
 });
 
 onClick('info', function () {
