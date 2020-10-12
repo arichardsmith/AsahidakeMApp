@@ -13,21 +13,6 @@ media_folder: "public/images/cms"
 public_folder: "images/cms"
 
 collections:
-  - name: "使い方"
-    label: "readMe"
-    folder: "content"
-    create: true
-    slug: "{{fields.slug}}"
-    identifier_field: label
-    fields:
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Date", name: "date", widget: "date",format: "YYYY-MM-DD"}
-      - {label: "Modified", name: "modified", widget: "string", required: false}
-      - {label: "Category", name: "category", widget: "string"}
-      - {label: "Tags", name: "tags", widget: "string"}
-      - {label: "Slug", name: "slug", widget: "string"}
-      - {label: "Related", name: "related_post", widget: "string", required: false}
-      - {label: "Body", name: "body", widget: "markdown"}
   - label: "登山道情報"
     name: tozan-joho
     folder: "content/tozanJoho"
