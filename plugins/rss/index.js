@@ -1,5 +1,5 @@
 const { promisify } = require("util");
-const { createWriteStream, writeFileCB: writeFile } = require("fs");
+const { createWriteStream, writeFile: writeFileCB } = require("fs");
 const writeFile = promisify(writeFileCB);
 
 const fetch = require("node-fetch");
