@@ -1,132 +1,91 @@
-const { promisify } = require('util');
-const writeFile = promisify(require('fs').writeFile);
+const { promisify } = require("util");
+const { createWriteStream, writeFileCB: writeFile } = require("fs");
+const writeFile = promisify(writeFileCB);
 
-const fetch = require('node-fetch');
-const RSSParser = require('rss-parser');
-const c = require('ansi-colors');
+const fetch = require("node-fetch");
+const RSSParser = require("rss-parser");
 
 const rss = new RSSParser();
-
-/**
- * Edited version of https://github.com/philhawksworth/netlify-plugin-fetch-feeds/blob/master/index.js
- * with:
- * - Error handling
- * - Retries
- * - Backoff
- */
 
 const BACKOFF = 2;
 
 module.exports = {
-  onPreBuild({ inputs, utils }) {
-    if (!Array.isArray(inputs.feeds)) {
-      // No feeds to process
-      return;
-    }
+  async onPreBuild({ inputs, utils }) {
+    const {
+      feedUrl,
+      filename,
+      errorFile,
+      retries = 0,
+      retryDelay = 2,
+    } = inputs;
 
-    const feedTasks = inputs.feeds.map((feed) =>
-      processFeed(feed, inputs, utils)
-    );
+    let result = undefined;
+    const log = new Logger(errorFile);
 
-    return Promise.all(feedTasks);
-  },
-};
+    for (let i = 0; i < retries; i++) {
+      const [fetchErr, xmlContent] = await tryCatch(async () => {
+        const res = await fetch(feedUrl);
+        if (!res.ok) {
+          throw new Error(`${res.statusCode}: ${res.statusText}`);
+        }
+        return await res.text();
+      });
 
-/**
- * Process an individual feed
- * @param {*} feed
- */
-async function processFeed(feed, inputs, utils) {
-  // Where to write the output json to
-  const dataFilePath = `${inputs.dataDir}/${feed.name}.json`;
+      if (fetchErr !== null) {
+        log.write(
+          `Fetch failed with error "${fetchErr.message}". Retrying ${
+            retries - i
+          } times`
+        );
+      } else {
+        const [parseErr, feed] = await tryCatch(async () => {
+          const feed = await rss.parseString(xmlContent);
 
-  // reinstate from cache if it is present
-  if (await utils.cache.has(dataFilePath)) {
-    await utils.cache.restore(dataFilePath);
-    console.log('Restored from cache:', c.green(feed.url));
+          return {
+            posts: feed.items.map(parseItem),
+          };
+        });
 
-    return;
-  } else {
-    // If it's not cached, let's fetch it and cache it.
-
-    const tries = feed.retries !== undefined ? feed.retries + 1 : 1;
-    const delay = feed.retryDelay !== undefined ? feed.retryDelay : 2; // Default to 2s
-    const timeout = feed.timeout !== undefined ? feed.timeout : 120; // Default to 2m
-
-    const start = Date.now();
-    const cutoff = start + timeout * 1000;
-
-    let json;
-
-    for (let i = 1; i <= tries; i++) {
-      try {
-        json = await loadFeed(feed.url);
-        break; // Stop looping early
-      } catch (err) {
-        const time = Math.round((Date.now() - start) / 1000);
-        if (i === tries || Date.now() > cutoff) {
-          // Last try
-          throw new Error(
-            `${c.red('Error: ')} Unable to load rss feed at ${
-              feed.url
-            } after ${tries} tries and ${time}s`
+        if (parseErr !== null) {
+          log.write(
+            `Parse failed with error "${parseErr.message}". Retrying ${
+              retries - i
+            } times`,
+            "Feed content:",
+            xmlContent
           );
         } else {
-          console.warn(
-            c.yellow('Warning: '),
-            `Load failed, trying again ${tries - i} times`,
-            c.grey(`(${time}s)`)
-          );
-
-          const retryTime = delay * 1000 * Math.pow(BACKOFF, i);
-          await wait(retryTime);
+          result = feed;
+          break;
         }
+      }
+
+      const retryTime = retryDelay * 1000 * Math.pow(BACKOFF, i);
+      await wait(retryTime);
+    }
+
+    if (result === undefined) {
+      if (await utils.cache.has(filename)) {
+        await utils.cache.restore(filename);
+        log.write("Restored from cache");
+        log.end();
+
+        return;
+      } else {
+        result = {
+          posts: [], // Set to an empty array so the json is valid
+        };
+        log.write("No file in cache, will output an empty file");
       }
     }
 
-    const data = JSON.stringify(json);
-    await writeFile(dataFilePath, data);
-    await utils.cache.save(dataFilePath, { ttl: feed.ttl });
-
-    console.log(
-      'Fetched and cached: ',
-      c.yellow(feed.url),
-      c.gray(`(TTL:${feed.ttl} seconds)`)
-    );
-
-    return true;
-  }
-}
-
-/**
- * Attempt to load a feed
- * @param {string} url - Url of feed
- */
-async function loadFeed(url) {
-  let feedXML;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error(`${c.red(res.statusCode)}: ${res.statusText}`);
-    }
-    feedXML = await res.text();
-  } catch (err) {
-    console.warn(`${c.yellow('Warning')}: Error reading blog feed`);
-    throw err;
-  }
-
-  try {
-    const feed = await rss.parseString(feedXML);
-    const posts = feed.items.map(parseItem);
-    return {
-      posts,
-    };
-  } catch (err) {
-    console.log(feedXML);
-    console.warn(`${c.yellow('Warning')}: Error parsing blog feed`);
-    throw err;
-  }
-}
+    const data = JSON.stringify(results);
+    await writeFile(filename, data);
+    await utils.cache.save(filename, { ttl: 3 * 24 * 60 * 60 }); // Cache for 3 days
+    log.write("Successfully wrote rss json");
+    log.end();
+  },
+};
 
 /**
  * Pause async excecution for given period
@@ -134,6 +93,19 @@ async function loadFeed(url) {
  */
 function wait(ms) {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
+}
+
+/**
+ * Run a (async) function with go style errors.
+ * Saves nesting hell of try catch statements.
+ * @param {function} fn
+ */
+async function tryCatch(fn) {
+  try {
+    return [null, await fn()];
+  } catch (err) {
+    return [err, null];
+  }
 }
 
 /**
@@ -147,9 +119,9 @@ function parseItem(post, i) {
   }
 
   const description = post.content
-    .replace(/\\n<p>/g, '<p>') //delete '/n'
-    .replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, '') //delete 'style'
-    .replace(/\\/g, ''); //delete '\'
+    .replace(/\\n<p>/g, "<p>") //delete '/n'
+    .replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, "") //delete 'style'
+    .replace(/\\/g, ""); //delete '\'
 
   return {
     id: i,
@@ -158,4 +130,39 @@ function parseItem(post, i) {
     headPic,
     description,
   };
+}
+
+/**
+ * Logging helper. Outputs messages to both the console and a file
+ */
+class Logger {
+  constructor(outputFile) {
+    this.stream = null;
+    this.target = outputFile;
+    this.entries = [];
+  }
+
+  writeMsg(msg) {
+    if (this.stream === null) {
+      this.stream = createWriteStream(this.target);
+    }
+
+    this.stream.write(msg);
+  }
+
+  write(...lines) {
+    const timestamp = new Date().toISOString();
+
+    lines[0] = `[${timestamp}] ${lines[0]}`;
+
+    const msg = lines.join("\n");
+    console.log(msg);
+    this.writeMsg(msg);
+  }
+
+  end() {
+    if (this.stream !== null) {
+      this.stream.end();
+    }
+  }
 }
