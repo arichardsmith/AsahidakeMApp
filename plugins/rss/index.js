@@ -156,7 +156,7 @@ class Logger {
     lines[0] = `[${timestamp}] ${lines[0]}`;
 
     const msg = lines.join("\n");
-    console.log(msg);
+    console.log(lines[0]);
     this.writeMsg(msg);
   }
 
