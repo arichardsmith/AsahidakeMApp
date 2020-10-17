@@ -43,6 +43,10 @@ export async function doNav(target) {
       await loadURL('#column', 'blog.html');
       highlightTrail(null);
       break;
+    case 'aboutUs':
+      await loadURL('#column', 'aboutUs.html');
+      highlightTrail(null);
+      break;
     case 'aboutSugatami':
     default:
       // 404 = aboutSugatami
@@ -97,6 +101,9 @@ onClick('aboutDaisetsuzanGrade', function () {
 
 onClick('blog', function () {
   pushStateAndNav('blog');
+});
+onClick('aboutUs', function () {
+  pushStateAndNav('aboutUs');
 });
 
 const navElements = document.querySelectorAll('.navbar-burger,.navbar-menu');

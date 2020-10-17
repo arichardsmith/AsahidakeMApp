@@ -27,7 +27,7 @@
         <div class="navbar-brand">
             <a class="navbar-item" href="./">
                 <!-- <img src="images/logo.png" style="height:100%; " /> -->
-                <p>旭岳監視員 MAP</p>
+                <p class="is-size-5">旭岳監視員 MAP</p>
             </a>
 
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" >
@@ -38,17 +38,24 @@
         </div>
         <div class="navbar-menu">
             <div class="navbar-end">
-                <a class="navbar-item" id="aboutDaisetsuzan">
-                    大雪山について
-                </a>
-                <a class="navbar-item" id="aboutDaisetsuzanGrade">
-                    大雪山グレードについて   
-                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        大雪山について
+                    </a>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" id="aboutDaisetsuzan">
+                            大雪山国立公園について
+                        </a>
+                        <a class="navbar-item" id="aboutDaisetsuzanGrade">
+                            大雪山グレードについて
+                        </a>
+                    </div>
+                </div>
                 <a class="navbar-item" id="aboutSugatami">
-                    姿見園地  
+                    姿見の池園地  
                 </a>
                 <a class="navbar-item" id="blog">
-                    監視員ブログ  
+                    ブログ  
                 </a>
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
@@ -73,6 +80,9 @@
                         </a> -->
                     </div>
                 </div>
+                <a class="navbar-item" id="aboutUs">
+                    監視員について  
+                </a>
             </div>
         </div>
     </nav>
