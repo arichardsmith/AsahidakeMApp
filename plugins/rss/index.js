@@ -1,9 +1,17 @@
 const { promisify } = require("util");
-const { createWriteStream, writeFile: writeFileCB } = require("fs");
+const {
+  createWriteStream,
+  writeFile: writeFileCB,
+  existsSync,
+  readFile: readFileCB,
+} = require("fs");
 const writeFile = promisify(writeFileCB);
+const readFile = promisify(readFileCB);
 
 const fetch = require("node-fetch");
 const RSSParser = require("rss-parser");
+const mkdir = require("mkdirp");
+const { dirname } = require("path");
 
 const rss = new RSSParser();
 
@@ -67,10 +75,30 @@ module.exports = {
     if (result === undefined) {
       if (await utils.cache.has(filename)) {
         await utils.cache.restore(filename);
-        log.write("Restored from cache");
-        log.end();
 
-        return;
+        if (process.env.INCOMING_HOOK_BODY !== undefined) {
+          // Add new post from webhook
+          const post = JSON.parse(
+            decodeURIComponent(process.env.INCOMING_HOOK_BODY)
+          );
+          const content = JSON.parse(await readFile(filename));
+
+          result = {
+            posts: [post, ...content.posts].map((post, i) => {
+              return {
+                ...post,
+                id: i,
+              };
+            }),
+          };
+
+          log.write("Restored from cache and adding new post from webhook");
+        } else {
+          log.write("Restored from cache");
+          log.end();
+
+          return;
+        }
       } else {
         result = {
           posts: [], // Set to an empty array so the json is valid
@@ -79,7 +107,8 @@ module.exports = {
       }
     }
 
-    const data = JSON.stringify(results);
+    const data = JSON.stringify(result);
+    ensureFile(filename);
     await writeFile(filename, data);
     await utils.cache.save(filename, { ttl: 3 * 24 * 60 * 60 }); // Cache for 3 days
     log.write("Successfully wrote rss json");
@@ -132,6 +161,13 @@ function parseItem(post, i) {
   };
 }
 
+function ensureFile(filepath) {
+  const dir = dirname(filepath);
+  if (!existsSync(dir)) {
+    mkdir.sync(dir);
+  }
+}
+
 /**
  * Logging helper. Outputs messages to both the console and a file
  */
@@ -144,10 +180,11 @@ class Logger {
 
   writeMsg(msg) {
     if (this.stream === null) {
+      ensureFile(this.target);
       this.stream = createWriteStream(this.target);
     }
 
-    this.stream.write(msg);
+    this.stream.write(msg + "\n");
   }
 
   write(...lines) {

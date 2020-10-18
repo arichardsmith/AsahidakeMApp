@@ -11,7 +11,7 @@
     filename = "public/CMS/KanshiinBlog.json"
     
     # Where to output an error log
-    errorFile = "public/CMS/rss_error.txt"
+    errorFile = "public/CMS/rss_log.txt"
 
     feedUrl = "https://blog.goo.ne.jp/2291yamaiku/rss2.xml"
     retries = 3
