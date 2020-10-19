@@ -2,21 +2,17 @@
   publish = "public"
   command = "npm run build"
 
-
-
-# Config for the Netlify Build Plugin: netlify-plugin-fetch-feeds
+# Config for RSS plugin
 [[plugins]]
   package = "/plugins/rss"
 
   [plugins.inputs]
-    # Where should data files reside
-    dataDir = "public/CMS"
+    # Where should data file reside
+    filename = "public/CMS/KanshiinBlog.json"
+    
+    # Where to output an error log
+    errorFile = "public/CMS/rss_log.txt"
 
-    # All the feeds we wish to gather for use in the build
-  
-    [[plugins.inputs.feeds]]
-      name = "KanshiinBlog"
-      url = "https://blog.goo.ne.jp/2291yamaiku/rss2.xml"
-      ttl = 180
-      retries = 3 # Max attempts
-      retryDelay = 10 # Seconds. Exponentially backs off
+    feedUrl = "https://blog.goo.ne.jp/2291yamaiku/rss2.xml"
+    retries = 3
+    retryDelay = 10 # Seconds

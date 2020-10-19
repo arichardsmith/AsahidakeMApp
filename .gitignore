@@ -4,5 +4,9 @@
 # Ignore node files
 node_modules
 
+# Usually package-lock should be checked in,
+# but it causes a nightmare when `npm install`ing on the Sugatami wifi
+package-lock.json
+
 # Ignore blog json (it's recreated every build)
 public/cms/KanshiinBlog.json

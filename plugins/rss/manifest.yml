@@ -1,6 +1,12 @@
 name: kanshiin-rss
 inputs:
-  - name: dataDir
+  - name: filename
     required: true
-  - name: feeds
+  - name: feedUrl
     required: true
+  - name: errorFile
+    required: false
+  - name: retries
+    required: false
+  - name: retryDelay
+    required: false
