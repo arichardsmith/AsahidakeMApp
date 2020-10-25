@@ -1,51 +1,11 @@
 jest.mock("fs", () => {
   const fs = jest.requireActual("fs");
-  const { Writable } = require("stream");
-  const { resolve } = require("path");
-
-  const vfs = new Map();
-  const resetVFS = () => {
-    for (let file of vfs.keys()) {
-      if (file !== "__result__") {
-        vfs.delete(file);
-      }
-    }
-  };
-
-  const resJSON = fs.readFileSync(
-    resolve("./plugins/rss/__test__/result.json"),
-    "utf-8"
-  );
-  vfs.set("__result__", resJSON);
 
   return {
     ...fs,
-    readFile: (filename, encoding, cb) => {
-      if (typeof encoding === "function") {
-        cb = encoding;
-      }
-
-      if (vfs.has(filename)) {
-        cb(null, vfs.get(filename));
-      } else {
-        return fs.readFile(filename, encoding, cb);
-      }
-    },
     writeFile: jest.fn((filename, data, cb) => {
-      vfs.set(filename, data);
       cb();
     }),
-    createWriteStream(filename) {
-      return new Writable({
-        write(chunk, encoding, cb) {
-          const current = vfs.get(filename);
-          vfs.set(filename, (current || "") + chunk.toString());
-          cb();
-        },
-      });
-    },
-    vfs,
-    resetVFS,
   };
 });
 
@@ -74,7 +34,3 @@ jest.mock("node-fetch", () =>
     return fetch(url, ...args);
   })
 );
-
-jest.mock("mkdirp", () => ({
-  sync: () => void 0,
-}));

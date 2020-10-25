@@ -1,4 +1,4 @@
-const { join, resolve } = require("path");
+const { join } = require("path");
 
 // Apply mocks
 require("./mocks");
@@ -36,14 +36,9 @@ function pluginSetup(opts = {}) {
   };
 }
 
-function loadResult() {
-  return fs.vfs.get("__result__");
-}
-
 beforeEach(() => {
   fetch.mockClear();
   fs.writeFile.mockClear();
-  fs.resetVFS();
 });
 
 test("plugin runs successfully", async () => {
@@ -53,10 +48,20 @@ test("plugin runs successfully", async () => {
   expect(fs.writeFile).toBeCalled();
 
   const writeFile = fs.writeFile.mock.calls[0][0];
-  const writeContent = fs.writeFile.mock.calls[0][1];
-
   expect(writeFile).toEqual(opts.inputs.filename);
-  expect(writeContent).toEqual(loadResult());
+
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+  expect(writeContent.posts.length).toBeGreaterThan(0);
+
+  const firstPost = writeContent.posts[0];
+  expect(firstPost.date).toBe("2020-10-16T06:53:26.000Z");
+  expect(firstPost.title).toBe("【大雪山国立公園・旭岳情報】雪景色");
+  expect(firstPost.headPic).toBe(
+    "https://blogimg.goo.ne.jp/user_image/0d/80/cf91f6785ee142c259ea5a81adcb9ff5.jpg"
+  );
+  expect(firstPost.description).toMatch(
+    new RegExp("姿見の池園地はすっかり冬の様子になっています。")
+  );
 });
 
 test("plugin favors new data over cached", async () => {
@@ -84,7 +89,9 @@ test("plugin retries on fetch error", async () => {
 
   expect(fetch).toBeCalledTimes(3);
   expect(fs.writeFile).toBeCalled();
-  expect(fs.writeFile.mock.calls[0][1]).toEqual(loadResult());
+
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+  expect(writeContent.posts.length).toBeGreaterThan(0);
 });
 
 test("plugin retries on parse error", async () => {
@@ -97,91 +104,18 @@ test("plugin retries on parse error", async () => {
 
   expect(fetch).toBeCalledTimes(2);
   expect(fs.writeFile).toBeCalled();
-  expect(fs.writeFile.mock.calls[0][1]).toEqual(loadResult());
+
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+  expect(writeContent.posts.length).toBeGreaterThan(0);
 });
 
-test("plugin restores cached data if fetch fails", async () => {
-  fetch.mockImplementationOnce(() => {
-    throw new Error("Fetch error");
-  });
-
-  const has = jest.fn(() => Promise.resolve(true));
-  const restore = jest.fn(() => Promise.resolve());
-
-  const opts = pluginSetup({
-    inputs: {
-      retries: 0,
-    },
-    cache: {
-      has,
-      restore,
-    },
-  });
-
+test("plugin includes updated timestamp", async () => {
+  const opts = pluginSetup();
   await plugin.onPreBuild(opts);
 
-  expect(has).toBeCalledWith(opts.inputs.filename);
-  expect(restore).toBeCalledWith(opts.inputs.filename);
-});
-
-test("plugin adds content if provided by webhook", async () => {
-  fetch.mockImplementationOnce(() => {
-    throw new Error("Fetch error");
-  });
-
-  const has = jest.fn(() => Promise.resolve(true));
-  const restore = jest.fn((filename) => {
-    const content = loadResult();
-
-    return new Promise((resolve, reject) => {
-      fs.writeFile(filename, content, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
-  });
-
-  const opts = pluginSetup({
-    inputs: { retries: 0 },
-    cache: {
-      has,
-      restore,
-    },
-  });
-
-  process.env.INCOMING_HOOK_BODY = encodeURIComponent(
-    JSON.stringify({
-      title: "Test post",
-      date: "2020-10-16T06:53:26.000Z",
-      headPic:
-        "https://blogimg.goo.ne.jp/user_image/0d/80/cf91f6785ee142c259ea5a81adcb9ff5.jpg",
-      description: "A fake post",
-    })
-  );
-
-  await plugin.onPreBuild(opts);
-
-  const expected = JSON.parse(loadResult());
-  const newPost = {
-    id: 0,
-    date: "2020-10-16T06:53:26.000Z",
-    title: "Test post",
-    headPic:
-      "https://blogimg.goo.ne.jp/user_image/0d/80/cf91f6785ee142c259ea5a81adcb9ff5.jpg",
-    description: "A fake post",
-  };
-
-  expected.posts = [
-    newPost,
-    ...expected.posts.map((post) => {
-      post.id++;
-      return post;
-    }),
-  ];
-
-  const output = JSON.parse(fs.vfs.get(resolve(opts.inputs.filename)));
-  expect(output).toMatchObject(expected);
+  expect(fs.writeFile).toBeCalled();
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+  const date = writeContent.updated;
+  expect(date instanceof Date && !isNaN(date));
+  expect(writeContent.updated === writeContent.posts[0].date);
 });

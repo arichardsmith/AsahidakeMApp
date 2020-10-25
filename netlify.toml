@@ -1,6 +1,7 @@
 [build]
   publish = "public"
   command = "npm run build"
+  functions = "server/functions"
 
 # Config for RSS plugin
 [[plugins]]

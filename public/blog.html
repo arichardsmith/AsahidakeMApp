@@ -82,8 +82,8 @@
 </div>
 
 <script>
-	$.getJSON('./CMS/KanshiinBlog.json', (data) => {
-		// JSONデータを受信した後に実行する処理
+    function renderResult(data) {
+        // JSONデータを受信した後に実行する処理
 		//make div block
 		//box
 		var htmlStr ="";
@@ -112,6 +112,15 @@
  						<label class="readmore-label button is-link is-light" for="moreButton_${post.id}"></label>
 						</div><br/>`;
 		}
-		$("#items").html(htmlStr);
-	});
+        $("#items").html(htmlStr);
+    }
+
+    $.getJSON('.netlify/functions/rss')
+        .fail(err => {
+            // 読めないなら、buildのJSONを読んで見る
+            console.warn("RSSフィードを読み込めなかった。Prebuilt jsonを読んでみる")
+            $.getJSON('./CMS/KanshiinBlog.json')
+                .done(renderResult);
+        })
+        .done(renderResult);
 </script>
