@@ -49,15 +49,19 @@ test("plugin runs successfully", async () => {
 
   const writeFile = fs.writeFile.mock.calls[0][0];
   expect(writeFile).toEqual(opts.inputs.filename);
-  
+
   const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
   expect(writeContent.posts.length).toBeGreaterThan(0);
 
   const firstPost = writeContent.posts[0];
   expect(firstPost.date).toBe("2020-10-16T06:53:26.000Z");
   expect(firstPost.title).toBe("【大雪山国立公園・旭岳情報】雪景色");
-  expect(firstPost.headPic).toBe("https://blogimg.goo.ne.jp/user_image/0d/80/cf91f6785ee142c259ea5a81adcb9ff5.jpg");
-  expect(firstPost.description).toMatch(new RegExp("姿見の池園地はすっかり冬の様子になっています。"));
+  expect(firstPost.headPic).toBe(
+    "https://blogimg.goo.ne.jp/user_image/0d/80/cf91f6785ee142c259ea5a81adcb9ff5.jpg"
+  );
+  expect(firstPost.description).toMatch(
+    new RegExp("姿見の池園地はすっかり冬の様子になっています。")
+  );
 });
 
 test("plugin favors new data over cached", async () => {
@@ -111,6 +115,7 @@ test("plugin includes updated timestamp", async () => {
 
   expect(fs.writeFile).toBeCalled();
   const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
-
-  expect(writeContent.updated).toBeDefined();
-})
+  const date = writeContent.updated;
+  expect(date instanceof Date && !isNaN(date));
+  expect(writeContent.updated === writeContent.posts[0].date);
+});

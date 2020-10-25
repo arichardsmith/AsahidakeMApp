@@ -8,7 +8,7 @@ module.exports = {
   async onPreBuild({ inputs, utils }) {
     const { feedUrl, filename, retries = 0, retryDelay = 2 } = inputs;
 
-    const result = await retry(() => loadFeed(feedUrl), retries, retryDelay)
+    const result = await retry(() => loadFeed(feedUrl), retries, retryDelay);
 
     if (result === null) {
       if (await utils.cache.has(filename)) {
@@ -42,17 +42,19 @@ function wait(ms) {
 
 async function retry(fn, retries, retryDelay) {
   try {
-    return await fn()
-  } catch(err) {
+    return await fn();
+  } catch (err) {
     const remainingTries = retries - 1;
     if (remainingTries > 0) {
-      console.log(`Failed to load feed. ${err.message}\nRetrying ${retries - 1} times`)
+      console.log(
+        `Failed to load feed. ${err.message}\nRetrying ${retries - 1} times`
+      );
 
       const retryTime = retryDelay;
       await wait(retryTime);
-      return retry(fn, remainingTries, retryDelay)
+      return retry(fn, remainingTries, retryDelay);
     } else {
-      console.log(`Failed to load feed. ${err.message}`)
+      console.log(`Failed to load feed. ${err.message}`);
       return null;
     }
   }
