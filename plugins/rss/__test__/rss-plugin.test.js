@@ -1,4 +1,4 @@
-const { join, resolve } = require("path");
+const { join } = require("path");
 
 // Apply mocks
 require("./mocks");
@@ -36,14 +36,9 @@ function pluginSetup(opts = {}) {
   };
 }
 
-function loadResult() {
-  return fs.vfs.get("__result__");
-}
-
 beforeEach(() => {
   fetch.mockClear();
   fs.writeFile.mockClear();
-  fs.resetVFS();
 });
 
 test("plugin runs successfully", async () => {
@@ -56,10 +51,8 @@ test("plugin runs successfully", async () => {
   const writeContent = fs.writeFile.mock.calls[0][1];
 
   expect(writeFile).toEqual(opts.inputs.filename);
-  const writeObj = JSON.parse(writeContent);
-  const fixtObj = JSON.parse(loadResult());
   
-  expect(writeObj).toMatchObject(fixtObj)
+  expect(writeContent).toMatchSnapshot();
 });
 
 test("plugin favors new data over cached", async () => {
@@ -87,7 +80,7 @@ test("plugin retries on fetch error", async () => {
 
   expect(fetch).toBeCalledTimes(3);
   expect(fs.writeFile).toBeCalled();
-  expect(fs.writeFile.mock.calls[0][1]).toEqual(loadResult());
+  expect(fs.writeFile.mock.calls[0][1]).toMatchSnapshot();
 });
 
 test("plugin retries on parse error", async () => {
@@ -100,5 +93,5 @@ test("plugin retries on parse error", async () => {
 
   expect(fetch).toBeCalledTimes(2);
   expect(fs.writeFile).toBeCalled();
-  expect(fs.writeFile.mock.calls[0][1]).toEqual(loadResult());
+  expect(fs.writeFile.mock.calls[0][1]).toMatchSnapshot();
 });

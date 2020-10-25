@@ -1,41 +1,11 @@
 jest.mock("fs", () => {
   const fs = jest.requireActual("fs");
-  const { resolve } = require("path");
-
-  const vfs = new Map();
-  const resetVFS = () => {
-    for (let file of vfs.keys()) {
-      if (file !== "__result__") {
-        vfs.delete(file);
-      }
-    }
-  };
-
-  const resJSON = fs.readFileSync(
-    resolve("./plugins/rss/__test__/result.json"),
-    "utf-8"
-  );
-  vfs.set("__result__", resJSON);
 
   return {
     ...fs,
-    readFile: (filename, encoding, cb) => {
-      if (typeof encoding === "function") {
-        cb = encoding;
-      }
-
-      if (vfs.has(filename)) {
-        cb(null, vfs.get(filename));
-      } else {
-        return fs.readFile(filename, encoding, cb);
-      }
-    },
     writeFile: jest.fn((filename, data, cb) => {
-      vfs.set(filename, data);
       cb();
-    }),
-    vfs,
-    resetVFS,
+    })
   };
 });
 
