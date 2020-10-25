@@ -2,60 +2,15 @@ const { promisify } = require("util");
 const { writeFile: writeFileCB } = require("fs");
 const writeFile = promisify(writeFileCB);
 
-const fetch = require("node-fetch");
-const RSSParser = require("rss-parser");
-
-const rss = new RSSParser();
-
-const BACKOFF = 2;
+const loadFeed = require("../../server/common/load-feed.js");
 
 module.exports = {
   async onPreBuild({ inputs, utils }) {
     const { feedUrl, filename, retries = 0, retryDelay = 2 } = inputs;
 
-    let result = undefined;
+    const result = await retry(() => loadFeed(feedUrl), retries, retryDelay)
 
-    for (let i = 0; i < retries; i++) {
-      const [fetchErr, xmlContent] = await tryCatch(async () => {
-        const res = await fetch(feedUrl);
-        if (!res.ok) {
-          throw new Error(`${res.statusCode}: ${res.statusText}`);
-        }
-        return await res.text();
-      });
-
-      if (fetchErr !== null) {
-        console.log(
-          `Fetch failed with error "${fetchErr.message}". Retrying ${
-            retries - i
-          } times`
-        );
-      } else {
-        const [parseErr, feed] = await tryCatch(async () => {
-          const feed = await rss.parseString(xmlContent);
-
-          return {
-            posts: feed.items.map(parseItem),
-          };
-        });
-
-        if (parseErr !== null) {
-          console.log(
-            `Parse failed with error "${parseErr.message}". Retrying ${
-              retries - i
-            } times`
-          );
-        } else {
-          result = feed;
-          break;
-        }
-      }
-
-      const retryTime = retryDelay * 1000 * Math.pow(BACKOFF, i);
-      await wait(retryTime);
-    }
-
-    if (result === undefined) {
+    if (result === null) {
       if (await utils.cache.has(filename)) {
         await utils.cache.restore(filename);
 
@@ -69,7 +24,6 @@ module.exports = {
       }
     }
 
-    result.updated = (new Date(Date.now())).toISOString()
     const data = JSON.stringify(result);
 
     await writeFile(filename, data);
@@ -86,39 +40,20 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 }
 
-/**
- * Run a (async) function with go style errors.
- * Saves nesting hell of try catch statements.
- * @param {function} fn
- */
-async function tryCatch(fn) {
+async function retry(fn, retries, retryDelay) {
   try {
-    return [null, await fn()];
-  } catch (err) {
-    return [err, null];
+    return await fn()
+  } catch(err) {
+    const remainingTries = retries - 1;
+    if (remainingTries > 0) {
+      console.log(`Failed to load feed. ${err.message}\nRetrying ${retries - 1} times`)
+
+      const retryTime = retryDelay;
+      await wait(retryTime);
+      return retry(fn, remainingTries, retryDelay)
+    } else {
+      console.log(`Failed to load feed. ${err.message}`)
+      return null;
+    }
   }
-}
-
-/**
- * Format an individual post for use in blog template
- * @param {*} post - Post data from feed
- */
-function parseItem(post, i) {
-  let headPic = null;
-  if (post.enclosure !== undefined && post.enclosure.url !== undefined) {
-    headPic = post.enclosure.url;
-  }
-
-  const description = post.content
-    .replace(/\\n<p>/g, "<p>") //delete '/n'
-    .replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, "") //delete 'style'
-    .replace(/\\/g, ""); //delete '\'
-
-  return {
-    id: i,
-    date: post.isoDate,
-    title: post.title,
-    headPic,
-    description,
-  };
 }
