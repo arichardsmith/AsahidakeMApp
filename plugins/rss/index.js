@@ -1,17 +1,9 @@
 const { promisify } = require("util");
-const {
-  createWriteStream,
-  writeFile: writeFileCB,
-  existsSync,
-  readFile: readFileCB,
-} = require("fs");
+const { writeFile: writeFileCB } = require("fs");
 const writeFile = promisify(writeFileCB);
-const readFile = promisify(readFileCB);
 
 const fetch = require("node-fetch");
 const RSSParser = require("rss-parser");
-const mkdir = require("mkdirp");
-const { dirname } = require("path");
 
 const rss = new RSSParser();
 
@@ -19,16 +11,9 @@ const BACKOFF = 2;
 
 module.exports = {
   async onPreBuild({ inputs, utils }) {
-    const {
-      feedUrl,
-      filename,
-      errorFile,
-      retries = 0,
-      retryDelay = 2,
-    } = inputs;
+    const { feedUrl, filename, retries = 0, retryDelay = 2 } = inputs;
 
     let result = undefined;
-    const log = new Logger(errorFile);
 
     for (let i = 0; i < retries; i++) {
       const [fetchErr, xmlContent] = await tryCatch(async () => {
@@ -40,7 +25,7 @@ module.exports = {
       });
 
       if (fetchErr !== null) {
-        log.write(
+        console.log(
           `Fetch failed with error "${fetchErr.message}". Retrying ${
             retries - i
           } times`
@@ -55,12 +40,10 @@ module.exports = {
         });
 
         if (parseErr !== null) {
-          log.write(
+          console.log(
             `Parse failed with error "${parseErr.message}". Retrying ${
               retries - i
-            } times`,
-            "Feed content:",
-            xmlContent
+            } times`
           );
         } else {
           result = feed;
@@ -76,43 +59,21 @@ module.exports = {
       if (await utils.cache.has(filename)) {
         await utils.cache.restore(filename);
 
-        if (process.env.INCOMING_HOOK_BODY !== undefined) {
-          // Add new post from webhook
-          const post = JSON.parse(
-            decodeURIComponent(process.env.INCOMING_HOOK_BODY)
-          );
-          const content = JSON.parse(await readFile(filename));
-
-          result = {
-            posts: [post, ...content.posts].map((post, i) => {
-              return {
-                ...post,
-                id: i,
-              };
-            }),
-          };
-
-          log.write("Restored from cache and adding new post from webhook");
-        } else {
-          log.write("Restored from cache");
-          log.end();
-
-          return;
-        }
+        console.log("Restored from cache");
+        return;
       } else {
         result = {
           posts: [], // Set to an empty array so the json is valid
         };
-        log.write("No file in cache, will output an empty file");
+        console.log("No file in cache, will output an empty file");
       }
     }
 
     const data = JSON.stringify(result);
-    ensureFile(filename);
+
     await writeFile(filename, data);
     await utils.cache.save(filename, { ttl: 3 * 24 * 60 * 60 }); // Cache for 3 days
-    log.write("Successfully wrote rss json");
-    log.end();
+    console.log("Successfully wrote rss json");
   },
 };
 
@@ -159,47 +120,4 @@ function parseItem(post, i) {
     headPic,
     description,
   };
-}
-
-function ensureFile(filepath) {
-  const dir = dirname(filepath);
-  if (!existsSync(dir)) {
-    mkdir.sync(dir);
-  }
-}
-
-/**
- * Logging helper. Outputs messages to both the console and a file
- */
-class Logger {
-  constructor(outputFile) {
-    this.stream = null;
-    this.target = outputFile;
-    this.entries = [];
-  }
-
-  writeMsg(msg) {
-    if (this.stream === null) {
-      ensureFile(this.target);
-      this.stream = createWriteStream(this.target);
-    }
-
-    this.stream.write(msg + "\n");
-  }
-
-  write(...lines) {
-    const timestamp = new Date().toISOString();
-
-    lines[0] = `[${timestamp}] ${lines[0]}`;
-
-    const msg = lines.join("\n");
-    console.log(lines[0]);
-    this.writeMsg(msg);
-  }
-
-  end() {
-    if (this.stream !== null) {
-      this.stream.end();
-    }
-  }
 }
