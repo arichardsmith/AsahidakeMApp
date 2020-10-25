@@ -5,7 +5,7 @@ jest.mock("fs", () => {
     ...fs,
     writeFile: jest.fn((filename, data, cb) => {
       cb();
-    })
+    }),
   };
 });
 

@@ -10,3 +10,5 @@ package-lock.json
 
 # Ignore blog json (it's recreated every build)
 public/cms/KanshiinBlog.json
+# Local Netlify folder
+.netlify

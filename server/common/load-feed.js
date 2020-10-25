@@ -1,18 +1,18 @@
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 const RSSParser = require("rss-parser");
 
 module.exports = async function loadFeed(url) {
-  let rssContent
+  let rssContent;
 
   try {
     const res = await fetch(url);
     if (!res.ok) {
-      throw new Error(`Fetch failed\n${res.statusText}`)
+      throw new Error(`Fetch failed\n${res.statusText}`);
     }
 
     rssContent = await res.text();
   } catch (err) {
-    err.message = `Fetch failed\n${err.message}`
+    err.message = `Fetch failed\n${err.message}`;
     throw err;
   }
 
@@ -20,18 +20,19 @@ module.exports = async function loadFeed(url) {
 
   try {
     const feed = await rss.parseString(rssContent);
+    const posts = feed.items.map(parseItem);
 
     const parsedFeed = {
-      updated: (new Date(Date.now())).toISOString(),
-      posts: feed.items.map(parseItem)
-    }
+      updated: posts[0].date,
+      posts,
+    };
 
-    return parsedFeed
+    return parsedFeed;
   } catch (err) {
     err.message = `RSS parse failed\n${err.message}`;
     throw err;
   }
-}
+};
 
 function parseItem(post, i) {
   let headPic = null;
