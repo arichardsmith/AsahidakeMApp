@@ -69,6 +69,7 @@ module.exports = {
       }
     }
 
+    result.updated = (new Date(Date.now())).toISOString()
     const data = JSON.stringify(result);
 
     await writeFile(filename, data);

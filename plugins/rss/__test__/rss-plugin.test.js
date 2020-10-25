@@ -48,11 +48,16 @@ test("plugin runs successfully", async () => {
   expect(fs.writeFile).toBeCalled();
 
   const writeFile = fs.writeFile.mock.calls[0][0];
-  const writeContent = fs.writeFile.mock.calls[0][1];
-
   expect(writeFile).toEqual(opts.inputs.filename);
   
-  expect(writeContent).toMatchSnapshot();
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+  expect(writeContent.posts.length).toBeGreaterThan(0);
+
+  const firstPost = writeContent.posts[0];
+  expect(firstPost.date).toBe("2020-10-16T06:53:26.000Z");
+  expect(firstPost.title).toBe("【大雪山国立公園・旭岳情報】雪景色");
+  expect(firstPost.headPic).toBe("https://blogimg.goo.ne.jp/user_image/0d/80/cf91f6785ee142c259ea5a81adcb9ff5.jpg");
+  expect(firstPost.description).toMatch(new RegExp("姿見の池園地はすっかり冬の様子になっています。"));
 });
 
 test("plugin favors new data over cached", async () => {
@@ -80,7 +85,9 @@ test("plugin retries on fetch error", async () => {
 
   expect(fetch).toBeCalledTimes(3);
   expect(fs.writeFile).toBeCalled();
-  expect(fs.writeFile.mock.calls[0][1]).toMatchSnapshot();
+
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+  expect(writeContent.posts.length).toBeGreaterThan(0);
 });
 
 test("plugin retries on parse error", async () => {
@@ -93,5 +100,17 @@ test("plugin retries on parse error", async () => {
 
   expect(fetch).toBeCalledTimes(2);
   expect(fs.writeFile).toBeCalled();
-  expect(fs.writeFile.mock.calls[0][1]).toMatchSnapshot();
+
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+  expect(writeContent.posts.length).toBeGreaterThan(0);
 });
+
+test("plugin includes updated timestamp", async () => {
+  const opts = pluginSetup();
+  await plugin.onPreBuild(opts);
+
+  expect(fs.writeFile).toBeCalled();
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+
+  expect(writeContent.updated).toBeDefined();
+})
