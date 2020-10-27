@@ -14,6 +14,7 @@
 
         
         <link rel="stylesheet" href="assets/index.css" />
+        <link rel="icon" href="../images/favicon.ico" />
         <!-- <link rel="resources" href="./rresources/qgis2web.js"> -->
         <script id="map-script" src="assets/asahidakemap.js" async></script>
         <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script> -->
@@ -21,30 +22,6 @@
 
         <title>旭岳監視員 MAP</title>
 
-        <style>         
-            #expandBtn {
-                position: relative;
-                top: 0;
-                opacity: 0;
-                width: 0%;
-                height: 0%;
-            }   
-            #expandLabel{
-                display: inline-block;
-                margin: 0% 0% 0% 90%;
-                width: 6%;
-                height: 3%;
-                background: #ffffff;
-                -webkit-border-bottom-right-radius: 10px;
-                -webkit-border-bottom-left-radius: 10px;
-                -moz-border-radius-bottomright: 10px;
-                -moz-border-radius-bottomleft: 10px;
-                border-bottom-right-radius: 10px;
-                border-bottom-left-radius: 10px;
-                background :#e0e0e0;
-                text-align: center;
-            }
-        </style>
     </head>
     <body>
         <!-- /*ナビゲーションバー*/ -->
@@ -83,11 +60,11 @@
                     ブログ  
                 </a>
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" id="info">
                         登山情報
                     </a>
                     <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" id="info">
+                        <a class="navbar-item" id="info_child" >
                             登山道情報
                         </a>
                         <hr class="navbar-divider">
@@ -124,16 +101,27 @@
             <!-- ここに写真読み込まれる。 -->
         </div>
     </div>
-    <div>
+    <div style="text-align:right">
         <input type="checkbox" name="expandBtn" id="expandBtn" >
-        <label class="is-size-5" id="expandLabel" for="expandBtn">拡大</label>
+        <label class="is-size-5" id="expandLabel" for="expandBtn">マップを拡大</label>
     </div>
 
     <section class="section" id="column">
         <!-- ここに記事読み込まれる。 -->
     </section>
-    <footer class="footer">
-        <p>「測量法に基づく国土地理院長承認（使用）R 2JHs 394」</p>
+    <footer class="footer" style="text-align:right">
+        <a  href='https://www.facebook.com/AsahidakeNatureKeeper' target="_blank" rel="noopener noreferrer">
+            <img src='../images/f_logo_RGB-Blue_58.png' class='linkImg'/>
+        </a>
+
+        <a  href='https://twitter.com/22asahidake91' target="_blank" rel="noopener noreferrer">
+            <img src='../images/twitterLogo.png' class='linkImg'/>
+        </a>
+
+        <a  href='https://www.instagram.com/asahidake_nature_keeper' target="_blank" rel="noopener noreferrer">
+            <img src='../images/Instagram_AppIcon_Aug2017.png' class='linkImg'/>
+        </a>
+
     </footer>
         <script src="assets/urlhistory.js"></script>
     </body>

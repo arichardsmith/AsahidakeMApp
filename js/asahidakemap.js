@@ -237,14 +237,14 @@ export function updateSize(){
   expandBtn.onchange = function(){
     if(expandBtn.checked){
       MAppArea.style.height = '80%';
-      expandLabel.innerHTML = '縮小';
+      expandLabel.innerHTML = 'マップを縮小';
       expandLabel.style.border = 'thin solid';
       expandLabel.style.borderTopStyle = 'none';
     }
     else{
       MAppArea.style.height = '50%';
       expandLabel.style.border = 'none';
-      expandLabel.innerHTML = '拡大';
+      expandLabel.innerHTML = 'マップを拡大';
     }
     map.updateSize();
   }
