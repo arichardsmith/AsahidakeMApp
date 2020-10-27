@@ -8,6 +8,7 @@ import { baseTiles } from './map/base.js';
 import { trailGroup, highlightTrail } from './map/trails.js';
 import { jpLabelsLayer, enLabelsLayer } from './map/labels.js';
 
+
 export { highlightTrail };
 
 export const view = new View({
@@ -227,3 +228,26 @@ onPhotosChange(DisplayPicColumn); // 写真レイヤー変化イベント
 map.on('click', handleMapPointer);
 fitView('loop');
 onPhotosChange(showHowTo); // 写真レイヤーロード後
+
+//expand Button のイベント
+const expandBtn = document.getElementById('expandBtn');
+const expandLabel = document.getElementById('expandLabel');
+const MAppArea = document.getElementById('MApp');
+export function updateSize(){
+  expandBtn.onchange = function(){
+    if(expandBtn.checked){
+      MAppArea.style.height = '80%';
+      expandLabel.innerHTML = 'マップを縮小';
+      expandLabel.style.border = 'thin solid';
+      expandLabel.style.borderTopStyle = 'none';
+    }
+    else{
+      MAppArea.style.height = '50%';
+      expandLabel.style.border = 'none';
+      expandLabel.innerHTML = 'マップを拡大';
+    }
+    map.updateSize();
+  }
+}
+updateSize();
+

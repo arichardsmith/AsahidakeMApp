@@ -58,7 +58,6 @@ export async function doNav(target) {
 }
 
 export function pushStateAndNav(pageName) {
-  console.dir('pushStateAndNav');
   window.history.pushState({ page: pageName }, null, '#/' + pageName);
   doNav(pageName);
 }
@@ -92,7 +91,9 @@ onClick('aboutSusoai', function () {
 
 onClick('info', function () {
   pushStateAndNav('info');
-  // $("html,body").animate({scrollTop:position},600);
+});
+onClick('info_child', function () {
+  pushStateAndNav('info');
 });
 
 onClick('aboutDaisetsuzanGrade', function () {
@@ -121,7 +122,6 @@ for (let element of navElements) {
 
 window.onpopstate = function () {
   const page = history.state !== null ? history.state.page : null;
-  console.dir('onpopstate  state:' + page);
   doNav(page);
 };
 
