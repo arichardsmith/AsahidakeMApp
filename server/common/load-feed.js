@@ -43,7 +43,10 @@ function parseItem(post, i) {
   const description = post.content
     .replace(/\\n<p>/g, "<p>") //delete '/n'
     .replace(/style=\\(".*?"|'.*?'|[^'"])*?\//g, "") //delete 'style'
-    .replace(/\\/g, ""); //delete '\'
+    .replace(/\\/g, "") //delete '\'
+    .replace(/キタキツネ/g, "キタキツネ🦊")     //🤫🤫🤫  
+    .replace(/エゾシカ/g, "エゾシカ🦌")         
+    .replace(/エゾシマリス/g, "エゾシマリス🐿");
 
   return {
     id: i,
