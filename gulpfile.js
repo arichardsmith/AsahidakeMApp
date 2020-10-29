@@ -1,5 +1,5 @@
 const { src, dest, parallel, watch } = require('gulp');
-const { resolve } = require('path');
+const { resolve, join } = require('path');
 
 const sourcemaps = require('gulp-sourcemaps');
 
@@ -39,12 +39,16 @@ async function buildJS() {
       input: JS_CONFIG[moduleName].input,
       plugins: [nodeResolve(), commonjs(), terser()],
       context: 'this',
+      external: ['jquery'],
     }).then((bundle) => {
       return bundle.write({
         file: JS_CONFIG[moduleName].output,
         format: 'iife',
         name: moduleName,
         sourcemap: true,
+        globals: {
+          jquery: '$'
+        }
       });
     });
 
@@ -95,16 +99,9 @@ function watchCSS() {
 function runRSSPlugin() {
   const plugin = require('./plugins/rss/index.js');
   const inputs = {
-    dataDir: 'public/CMS',
-    feeds: [
-      {
-        name: 'KanshiinBlog',
-        url: 'https://blog.goo.ne.jp/2291yamaiku/rss2.xml',
-        ttl: 180,
-        retries: 3,
-        retryDelay: 10,
-      },
-    ],
+    filename: join(__dirname, "./public/CMS/KanshiinBlog.json"),
+    feedUrl: "https://blog.goo.ne.jp/2291yamaiku/rss2.xml",
+    retries: 0
   };
 
   const utils = {
