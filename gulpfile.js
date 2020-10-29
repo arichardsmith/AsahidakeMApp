@@ -39,12 +39,16 @@ async function buildJS() {
       input: JS_CONFIG[moduleName].input,
       plugins: [nodeResolve(), commonjs(), terser()],
       context: 'this',
+      external: ['jquery'],
     }).then((bundle) => {
       return bundle.write({
         file: JS_CONFIG[moduleName].output,
         format: 'iife',
         name: moduleName,
         sourcemap: true,
+        globals: {
+          jquery: '$'
+        }
       });
     });
 
