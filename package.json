@@ -34,11 +34,10 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "scripts": {
-    "eleventy:dev": "eleventy --watch",
     "eleventy:build": "eleventy",
     "cms:dev": "netlify-cms-proxy-server",
-    "netlify:dev": "netlify dev",
-    "start": "run-p eleventy:dev cms:dev gulp:watch netlify:dev",
+    "netlify:dev": "netlify dev --offline",
+    "start": "run-p cms:dev gulp:watch netlify:dev",
     "build": "run-p eleventy:build gulp:build",
     "gulp:watch": "gulp watch",
     "gulp:build": "gulp build",
