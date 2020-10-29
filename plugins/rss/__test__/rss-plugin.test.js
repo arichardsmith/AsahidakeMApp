@@ -119,3 +119,25 @@ test("plugin includes updated timestamp", async () => {
   expect(date instanceof Date && !isNaN(date));
   expect(writeContent.updated === writeContent.posts[0].date);
 });
+
+test("writes an empty JSON array if file not cached", async () => {
+  const opts = pluginSetup({
+    inputs: {
+      retries: 0
+    },
+    cache: {
+      has: () => Promise.resolve(false)
+    }
+  });
+
+  fetch.mockImplementationOnce(() => {
+    throw new Error("Test error")
+  });
+
+  await plugin.onPreBuild(opts)
+
+  expect(fs.writeFile).toBeCalled();
+
+  const writeContent = JSON.parse(fs.writeFile.mock.calls[0][1]);
+  expect(writeContent.posts.length).toBe(0);
+})
