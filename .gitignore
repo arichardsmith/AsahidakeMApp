@@ -12,3 +12,7 @@ package-lock.json
 public/cms/KanshiinBlog.json
 # Local Netlify folder
 .netlify
+
+# Ignore built files
+public/assets/*.*
+public/info.html
