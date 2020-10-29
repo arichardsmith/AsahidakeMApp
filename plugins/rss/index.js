@@ -8,7 +8,7 @@ module.exports = {
   async onPreBuild({ inputs, utils }) {
     const { feedUrl, filename, retries = 0, retryDelay = 2 } = inputs;
 
-    const result = await retry(() => loadFeed(feedUrl), retries, retryDelay);
+    let result = await retry(() => loadFeed(feedUrl), retries, retryDelay);
 
     if (result === null) {
       if (await utils.cache.has(filename)) {
