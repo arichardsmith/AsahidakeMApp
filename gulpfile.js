@@ -1,4 +1,4 @@
-const { src, dest, parallel, watch } = require('gulp');
+const { src, dest, parallel, series, watch } = require('gulp');
 const { resolve, join } = require('path');
 
 const sourcemaps = require('gulp-sourcemaps');
@@ -116,5 +116,5 @@ function runRSSPlugin() {
 
 exports.buildCSS = buildCSS;
 exports.build = parallel(buildJS, buildCSS);
-exports.watch = parallel(watchJS, watchCSS, runRSSPlugin);
+exports.watch = series(buildCSS, parallel(watchJS, watchCSS, runRSSPlugin));
 exports.runRSS = runRSSPlugin;
