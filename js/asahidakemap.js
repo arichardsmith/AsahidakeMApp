@@ -229,20 +229,27 @@ map.on('click', handleMapPointer);
 fitView('loop');
 onPhotosChange(showHowTo); // 写真レイヤーロード後
 
+
 //expand Button のイベント
 const expandBtn = document.getElementById('expandBtn');
 const expandLabel = document.getElementById('expandLabel');
 const MAppArea = document.getElementById('MApp');
+const mapArea = document.getElementById('map');
+const picArea = document.getElementById('pic');
 export function updateSize(){
   expandBtn.onchange = function(){
     if(expandBtn.checked){
       MAppArea.style.height = '80%';
+      mapArea.style.height = '85%';
+      picArea.style.height = '15%';
       expandLabel.innerHTML = 'マップを縮小';
       expandLabel.style.border = 'thin solid';
       expandLabel.style.borderTopStyle = 'none';
     }
     else{
       MAppArea.style.height = '50%';
+      mapArea.style.height = '80%';
+      picArea.style.height = '20%';
       expandLabel.style.border = 'none';
       expandLabel.innerHTML = 'マップを拡大';
     }
