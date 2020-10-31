@@ -55,6 +55,8 @@ export async function doNav(target) {
       highlightTrail('sugatami');
       break;
   }
+
+  hookContentLinks(); //ロード後、毎回内容のリンクイベント付け
 }
 
 export function pushStateAndNav(pageName) {
@@ -62,50 +64,42 @@ export function pushStateAndNav(pageName) {
   doNav(pageName);
 }
 
-//クリックイベント関数の簡略化
-//javascript使っていたり　JQuery使っていたり分かりづらい
-//統一すべき
-function onClick(id, callback) {
-  document.getElementById(id).addEventListener('click', callback);
+/**
+ * サイト内リンクのイベント関数
+ * @param {*} evt 
+ */
+function handleClick(evt) {
+  evt.preventDefault();
+
+  const link = evt.target.closest("a");　//　もしく、aの中のelement
+  const page = new URL(link.href).hash.replace(/^#\//, "");
+  pushStateAndNav(page)
+  link.blur() // blurしないとメニュー閉まらない
 }
-//各ボタンの処理
-onClick('aboutDaisetsuzan', function () {
-  pushStateAndNav('aboutDaisetsuzan');
-});
 
-onClick('aboutSugatami', function () {
-  pushStateAndNav('aboutSugatami');
-});
+/**
+ * ナビゲーションにイベント付け
+ */
+function hookNavLinks() {
+  const links = [
+    ...document.querySelectorAll('.navbar a[href^="/#/"]'),
+    ...document.querySelectorAll('.navbar a[href^="#/"]')
+  ] // 全てのサイト内リンク
 
-onClick('aboutTrailToPeak', function () {
-  pushStateAndNav('aboutTrailToPeak');
-});
+  links.forEach(link => link.addEventListener("click", handleClick))
+}
 
-onClick('about6hLoop', function () {
-  pushStateAndNav('about6hLoop');
-});
+/**
+ * ページ内容内のリンクにイベント付け
+ */
+function hookContentLinks() {
+  const links = [
+    ...document.querySelectorAll('#column a[href^="/#/"]'),
+    ...document.querySelectorAll('#column a[href^="#/"]')
+  ] // 全てのサイト内リンク
 
-onClick('aboutSusoai', function () {
-  pushStateAndNav('aboutSusoai');
-});
-
-onClick('info', function () {
-  pushStateAndNav('info');
-});
-onClick('info_child', function () {
-  pushStateAndNav('info');
-});
-
-onClick('aboutDaisetsuzanGrade', function () {
-  pushStateAndNav('aboutDaisetsuzanGrade');
-});
-
-onClick('blog', function () {
-  pushStateAndNav('blog');
-});
-onClick('aboutUs', function () {
-  pushStateAndNav('aboutUs');
-});
+  links.forEach(link => link.addEventListener("click", handleClick))
+}
 
 const navElements = document.querySelectorAll('.navbar-burger,.navbar-menu');
 
@@ -126,6 +120,7 @@ window.onpopstate = function () {
 };
 
 doNav(document.location.hash.substring(2));
+hookNavLinks(); // 一回だけリンクのイベント付け
 
 $(document).ajaxStart(() => {
   NProgress.start();
