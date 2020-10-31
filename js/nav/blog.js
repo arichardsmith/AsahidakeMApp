@@ -49,18 +49,27 @@ function renderResult(data, target) {
 
 export function loadBlog(targetSelector) {
   return new Promise((resolve, reject) => {
+    const useNetlifyFunction = () => {
+      $.getJSON(".netlify/functions/rss")
+      .done(data => {
+        renderResult(data, targetSelector);
+        resolve()
+      })
+      .fail(err => {
+        // 本ブログに移動させる
+        document.location = "https://blog.goo.ne.jp/2291yamaiku";
+        reject(err);
+      });
+    }
+
     $.getJSON("/CMS/KanshiinBlog.json")
       .fail((err) => {
         // 読めないなら、buildのJSONを読んで見る
         console.warn(
           "Prebuilt jsonを読み込めなかった。RSSフィードを読んでみる"
         );
-        $.getJSON(".netlify/functions/rss")
-          .done(data => {
-            renderResult(data, targetSelector);
-            resolve()
-          })
-          .fail(reject);
+        
+        useNetlifyFunction();
       })
       .done(data => {
         const lastUpdate = new Date(data.updated);
@@ -72,13 +81,7 @@ export function loadBlog(targetSelector) {
             "Prebuilt jsonはあっていない、RSSフィードを読んでみる"
           );
 
-          $.getJSON(".netlify/functions/rss")
-            .done(data => {
-              renderResult(data, targetSelector);
-              resolve()
-            })
-            .fail(reject);
-
+          useNetlifyFunction();
           return;
         }
 
