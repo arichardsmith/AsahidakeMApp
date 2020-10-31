@@ -2,6 +2,7 @@ import $ from 'jquery';
 import NProgress from 'nprogress';
 
 import { loadURL } from './nav/loading.js';
+import { loadBlog } from './nav/blog.js';
 import { fitView, highlightTrail } from './nav/map-control.js';
 /**
  * ナビの処理
@@ -40,9 +41,10 @@ export async function doNav(target) {
       highlightTrail(null);
       break;
     case 'blog':
-      await loadURL('#column', 'blog.html');
+      await loadBlog('#column');
+      hookBlogLinks();
       highlightTrail(null);
-      break;
+      return; // hookContentLinks実行しないため
     case 'aboutUs':
       await loadURL('#column', 'aboutUs.html');
       highlightTrail(null);
@@ -99,6 +101,18 @@ function hookContentLinks() {
   ] // 全てのサイト内リンク
 
   links.forEach(link => link.addEventListener("click", handleClick))
+}
+
+function isInternalLink(element) {
+  const host = new URL(element.href).host;
+  return host === "kanshiin.netlify.app";
+}
+
+function hookBlogLinks() {
+  const allLinks = Array.from(document.querySelectorAll("#column a"));
+  const blogLinks = allLinks.filter(isInternalLink);
+
+  blogLinks.forEach(link => link.addEventListener("click", handleClick));
 }
 
 const navElements = document.querySelectorAll('.navbar-burger,.navbar-menu');
