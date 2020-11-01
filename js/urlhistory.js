@@ -4,6 +4,9 @@ import NProgress from 'nprogress';
 import { loadURL } from './nav/loading.js';
 import { loadBlog } from './nav/blog.js';
 import { fitView, highlightTrail } from './nav/map-control.js';
+
+const HOSTNAME = "kanshiin.netlify.app";
+
 /**
  * ナビの処理
  * いつも同じようにナビするため、必ずこの関数を使って
@@ -71,12 +74,13 @@ export function pushStateAndNav(pageName) {
  * @param {*} evt 
  */
 function handleClick(evt) {
-  evt.preventDefault();
-
-  const link = evt.target.closest("a");　//　もしく、aの中のelement
-  const page = new URL(link.href).hash.replace(/^#\//, "");
-  pushStateAndNav(page)
-  link.blur() // blurしないとメニュー閉まらない
+  const link = evt.target.closest("a"); //　もしく、aの中のelementはクリックされた
+  if (link !== undefined && link.href !== undefined) {
+    const page = new URL(link.href).hash.replace(/^#\//, "");
+    pushStateAndNav(page);
+    evt.preventDefault();
+    link.blur(); // blurしないとメニュー閉まらない
+  }
 }
 
 /**
@@ -104,8 +108,16 @@ function hookContentLinks() {
 }
 
 function isInternalLink(element) {
-  const host = new URL(element.href).host;
-  return host === "kanshiin.netlify.app";
+  if (element.href === undefined) {
+    return false;
+  }
+  
+  try {
+    const host = new URL(element.href).host;
+    return host === HOSTNAME;
+  } catch {
+    return false;
+  }
 }
 
 function hookBlogLinks() {
