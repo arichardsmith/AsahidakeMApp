@@ -1,9 +1,9 @@
-import $ from 'jquery';
-import NProgress from 'nprogress';
+import $ from "jquery";
+import NProgress from "nprogress";
 
-import { loadURL } from './nav/loading.js';
-import { loadBlog } from './nav/blog.js';
-import { fitView, highlightTrail } from './nav/map-control.js';
+import { loadURL } from "./nav/loading.js";
+import { loadBlog } from "./nav/blog.js";
+import { fitView, highlightTrail } from "./nav/map-control.js";
 
 const HOSTNAME = "kanshiin.netlify.app";
 
@@ -15,49 +15,49 @@ const HOSTNAME = "kanshiin.netlify.app";
 export async function doNav(target) {
   // マップ更新はload後ため、loadURLはawait
   switch (target) {
-    case 'aboutDaisetsuzan':
-      await loadURL('#column', 'aboutDaisetsuzan.html');
-      fitView('loop');
+    case "aboutDaisetsuzan":
+      await loadURL("#column", "aboutDaisetsuzan.html");
+      fitView("loop");
       highlightTrail(null);
       break;
-    case 'aboutTrailToPeak':
-      await loadURL('#column', 'aboutTrailToPeak.html');
-      fitView('summit');
-      highlightTrail('summit');
+    case "aboutTrailToPeak":
+      await loadURL("#column", "aboutTrailToPeak.html");
+      fitView("summit");
+      highlightTrail("summit");
       break;
-    case 'about6hLoop':
-      await loadURL('#column', 'about6hLoop.html');
-      fitView('loop');
-      highlightTrail('loop');
+    case "about6hLoop":
+      await loadURL("#column", "about6hLoop.html");
+      fitView("loop");
+      highlightTrail("loop");
       break;
-    case 'aboutSusoai':
-      await loadURL('#column', 'aboutSusoai.html');
-      fitView('nakadake');
-      highlightTrail('nakadake');
+    case "aboutSusoai":
+      await loadURL("#column", "aboutSusoai.html");
+      fitView("nakadake");
+      highlightTrail("nakadake");
       break;
-    case 'info':
-      await loadURL('#column', 'info.html');
+    case "info":
+      await loadURL("#column", "info.html");
       highlightTrail(null);
       break;
-    case 'aboutDaisetsuzanGrade':
-      await loadURL('#column', 'aboutDaisetsuzanGrade.html');
+    case "aboutDaisetsuzanGrade":
+      await loadURL("#column", "aboutDaisetsuzanGrade.html");
       highlightTrail(null);
       break;
-    case 'blog':
-      await loadBlog('#column');
+    case "blog":
+      await loadBlog("#column");
       hookBlogLinks();
       highlightTrail(null);
       return; // hookContentLinks実行しないため
-    case 'aboutUs':
-      await loadURL('#column', 'aboutUs.html');
+    case "aboutUs":
+      await loadURL("#column", "aboutUs.html");
       highlightTrail(null);
       break;
-    case 'aboutSugatami':
+    case "aboutSugatami":
     default:
       // 404 = aboutSugatami
-      await loadURL('#column', 'aboutSugatami.html');
-      fitView('sugatami');
-      highlightTrail('sugatami');
+      await loadURL("#column", "aboutSugatami.html");
+      fitView("sugatami");
+      highlightTrail("sugatami");
       break;
   }
 
@@ -65,13 +65,13 @@ export async function doNav(target) {
 }
 
 export function pushStateAndNav(pageName) {
-  window.history.pushState({ page: pageName }, null, '#/' + pageName);
+  window.history.pushState({ page: pageName }, null, "#/" + pageName);
   doNav(pageName);
 }
 
 /**
  * サイト内リンクのイベント関数
- * @param {*} evt 
+ * @param {*} evt
  */
 function handleClick(evt) {
   const link = evt.target.closest("a"); //　もしく、aの中のelementはクリックされた
@@ -89,10 +89,10 @@ function handleClick(evt) {
 function hookNavLinks() {
   const links = [
     ...document.querySelectorAll('.navbar a[href^="/#/"]'),
-    ...document.querySelectorAll('.navbar a[href^="#/"]')
-  ] // 全てのサイト内リンク
+    ...document.querySelectorAll('.navbar a[href^="#/"]'),
+  ]; // 全てのサイト内リンク
 
-  links.forEach(link => link.addEventListener("click", handleClick))
+  links.forEach((link) => link.addEventListener("click", handleClick));
 }
 
 /**
@@ -101,17 +101,17 @@ function hookNavLinks() {
 function hookContentLinks() {
   const links = [
     ...document.querySelectorAll('#column a[href^="/#/"]'),
-    ...document.querySelectorAll('#column a[href^="#/"]')
-  ] // 全てのサイト内リンク
+    ...document.querySelectorAll('#column a[href^="#/"]'),
+  ]; // 全てのサイト内リンク
 
-  links.forEach(link => link.addEventListener("click", handleClick))
+  links.forEach((link) => link.addEventListener("click", handleClick));
 }
 
 function isInternalLink(element) {
   if (element.href === undefined) {
     return false;
   }
-  
+
   try {
     const host = new URL(element.href).host;
     return host === HOSTNAME;
@@ -124,20 +124,20 @@ function hookBlogLinks() {
   const allLinks = Array.from(document.querySelectorAll("#column a"));
   const blogLinks = allLinks.filter(isInternalLink);
 
-  blogLinks.forEach(link => link.addEventListener("click", handleClick));
+  blogLinks.forEach((link) => link.addEventListener("click", handleClick));
 }
 
-const navElements = document.querySelectorAll('.navbar-burger,.navbar-menu');
+const navElements = document.querySelectorAll(".navbar-burger,.navbar-menu");
 
 function toggleNavBarClass() {
   for (let element of navElements) {
-    element.classList.toggle('is-active');
+    element.classList.toggle("is-active");
   }
 }
 
 for (let element of navElements) {
   // navElementsは本当のArrayじゃないから、for (... of ...)のみ使える
-  element.addEventListener('click', toggleNavBarClass);
+  element.addEventListener("click", toggleNavBarClass);
 }
 
 window.onpopstate = function () {

@@ -42,7 +42,7 @@ function renderResult(data, target) {
   htmlStr += `
     <div class="column is-8 is-offset-2">
       <a class = 'is-size-4' href = 'https://blog.goo.ne.jp/2291yamaiku'> 過去のブログはこちら</a>
-    </div>`
+    </div>`;
 
   $(target).html(htmlStr);
 }
@@ -51,16 +51,16 @@ export function loadBlog(targetSelector) {
   return new Promise((resolve, reject) => {
     const useNetlifyFunction = () => {
       $.getJSON(".netlify/functions/rss")
-      .done(data => {
-        renderResult(data, targetSelector);
-        resolve()
-      })
-      .fail(err => {
-        // 本ブログに移動させる
-        document.location = "https://blog.goo.ne.jp/2291yamaiku";
-        reject(err);
-      });
-    }
+        .done((data) => {
+          renderResult(data, targetSelector);
+          resolve();
+        })
+        .fail((err) => {
+          // 本ブログに移動させる
+          document.location = "https://blog.goo.ne.jp/2291yamaiku";
+          reject(err);
+        });
+    };
 
     $.getJSON("/CMS/KanshiinBlog.json")
       .fail((err) => {
@@ -68,25 +68,25 @@ export function loadBlog(targetSelector) {
         console.warn(
           "Prebuilt jsonを読み込めなかった。RSSフィードを読んでみる"
         );
-        
+
         useNetlifyFunction();
       })
-      .done(data => {
+      .done((data) => {
         const lastUpdate = new Date(data.updated);
-        const invalidate = new Date(Date.now() - (INVALIDATE_CACHED_DATA * 60 * 60 * 1000));
+        const invalidate = new Date(
+          Date.now() - INVALIDATE_CACHED_DATA * 60 * 60 * 1000
+        );
 
         if (data.posts.length < 1 || lastUpdate < invalidate) {
           // functionで新たなデータを読む
-          console.log(
-            "Prebuilt jsonはあっていない、RSSフィードを読んでみる"
-          );
+          console.log("Prebuilt jsonはあっていない、RSSフィードを読んでみる");
 
           useNetlifyFunction();
           return;
         }
 
         renderResult(data, targetSelector);
-        resolve()
+        resolve();
       });
   });
 }
