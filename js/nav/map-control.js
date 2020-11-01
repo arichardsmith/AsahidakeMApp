@@ -45,13 +45,13 @@ function loadMap() {
       return resolve(window.AsahidakeMap);
     }
 
-    const scriptElement = document.getElementById('map-script');
-    scriptElement.addEventListener('load', () => {
+    const scriptElement = document.getElementById("map-script");
+    scriptElement.addEventListener("load", () => {
       if (window.AsahidakeMap !== undefined) {
         hasLoaded = true;
         resolve(window.AsahidakeMap);
       } else {
-        reject(new Error('Error loading map script'));
+        reject(new Error("Error loading map script"));
       }
     });
   });

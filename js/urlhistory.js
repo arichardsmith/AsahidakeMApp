@@ -1,8 +1,12 @@
-import $ from 'jquery';
-import NProgress from 'nprogress';
+import $ from "jquery";
+import NProgress from "nprogress";
 
-import { loadURL } from './nav/loading.js';
-import { fitView, highlightTrail } from './nav/map-control.js';
+import { loadURL } from "./nav/loading.js";
+import { loadBlog } from "./nav/blog.js";
+import { fitView, highlightTrail } from "./nav/map-control.js";
+
+const HOSTNAME = "kanshiin.netlify.app";
+
 /**
  * ナビの処理
  * いつも同じようにナビするため、必ずこの関数を使って
@@ -11,113 +15,129 @@ import { fitView, highlightTrail } from './nav/map-control.js';
 export async function doNav(target) {
   // マップ更新はload後ため、loadURLはawait
   switch (target) {
-    case 'aboutDaisetsuzan':
-      await loadURL('#column', 'aboutDaisetsuzan.html');
-      fitView('loop');
+    case "aboutDaisetsuzan":
+      await loadURL("#column", "aboutDaisetsuzan.html");
+      fitView("loop");
       highlightTrail(null);
       break;
-    case 'aboutTrailToPeak':
-      await loadURL('#column', 'aboutTrailToPeak.html');
-      fitView('summit');
-      highlightTrail('summit');
+    case "aboutTrailToPeak":
+      await loadURL("#column", "aboutTrailToPeak.html");
+      fitView("summit");
+      highlightTrail("summit");
       break;
-    case 'about6hLoop':
-      await loadURL('#column', 'about6hLoop.html');
-      fitView('loop');
-      highlightTrail('loop');
+    case "about6hLoop":
+      await loadURL("#column", "about6hLoop.html");
+      fitView("loop");
+      highlightTrail("loop");
       break;
-    case 'aboutSusoai':
-      await loadURL('#column', 'aboutSusoai.html');
-      fitView('nakadake');
-      highlightTrail('nakadake');
+    case "aboutSusoai":
+      await loadURL("#column", "aboutSusoai.html");
+      fitView("nakadake");
+      highlightTrail("nakadake");
       break;
-    case 'info':
-      await loadURL('#column', 'info.html');
+    case "info":
+      await loadURL("#column", "info.html");
       highlightTrail(null);
       break;
-    case 'aboutDaisetsuzanGrade':
-      await loadURL('#column', 'aboutDaisetsuzanGrade.html');
+    case "aboutDaisetsuzanGrade":
+      await loadURL("#column", "aboutDaisetsuzanGrade.html");
       highlightTrail(null);
       break;
-    case 'blog':
-      await loadURL('#column', 'blog.html');
+    case "blog":
+      await loadBlog("#column");
+      hookBlogLinks();
+      highlightTrail(null);
+      return; // hookContentLinks実行しないため
+    case "aboutUs":
+      await loadURL("#column", "aboutUs.html");
       highlightTrail(null);
       break;
-    case 'aboutUs':
-      await loadURL('#column', 'aboutUs.html');
-      highlightTrail(null);
-      break;
-    case 'aboutSugatami':
+    case "aboutSugatami":
     default:
       // 404 = aboutSugatami
-      await loadURL('#column', 'aboutSugatami.html');
-      fitView('sugatami');
-      highlightTrail('sugatami');
+      await loadURL("#column", "aboutSugatami.html");
+      fitView("sugatami");
+      highlightTrail("sugatami");
       break;
   }
+
+  hookContentLinks(); //ロード後、毎回内容のリンクイベント付け
 }
 
 export function pushStateAndNav(pageName) {
-  window.history.pushState({ page: pageName }, null, '#/' + pageName);
+  window.history.pushState({ page: pageName }, null, "#/" + pageName);
   doNav(pageName);
 }
 
-//クリックイベント関数の簡略化
-//javascript使っていたり　JQuery使っていたり分かりづらい
-//統一すべき
-function onClick(id, callback) {
-  document.getElementById(id).addEventListener('click', callback);
+/**
+ * サイト内リンクのイベント関数
+ * @param {*} evt
+ */
+function handleClick(evt) {
+  const link = evt.target.closest("a"); //　もしく、aの中のelementはクリックされた
+  if (link !== undefined && link.href !== undefined) {
+    const page = new URL(link.href).hash.replace(/^#\//, "");
+    pushStateAndNav(page);
+    evt.preventDefault();
+    link.blur(); // blurしないとメニュー閉まらない
+  }
 }
-//各ボタンの処理
-onClick('aboutDaisetsuzan', function () {
-  pushStateAndNav('aboutDaisetsuzan');
-});
 
-onClick('aboutSugatami', function () {
-  pushStateAndNav('aboutSugatami');
-});
+/**
+ * ナビゲーションにイベント付け
+ */
+function hookNavLinks() {
+  const links = [
+    ...document.querySelectorAll('.navbar a[href^="/#/"]'),
+    ...document.querySelectorAll('.navbar a[href^="#/"]'),
+  ]; // 全てのサイト内リンク
 
-onClick('aboutTrailToPeak', function () {
-  pushStateAndNav('aboutTrailToPeak');
-});
+  links.forEach((link) => link.addEventListener("click", handleClick));
+}
 
-onClick('about6hLoop', function () {
-  pushStateAndNav('about6hLoop');
-});
+/**
+ * ページ内容内のリンクにイベント付け
+ */
+function hookContentLinks() {
+  const links = [
+    ...document.querySelectorAll('#column a[href^="/#/"]'),
+    ...document.querySelectorAll('#column a[href^="#/"]'),
+  ]; // 全てのサイト内リンク
 
-onClick('aboutSusoai', function () {
-  pushStateAndNav('aboutSusoai');
-});
+  links.forEach((link) => link.addEventListener("click", handleClick));
+}
 
-onClick('info', function () {
-  pushStateAndNav('info');
-});
-onClick('info_child', function () {
-  pushStateAndNav('info');
-});
+function isInternalLink(element) {
+  if (element.href === undefined) {
+    return false;
+  }
 
-onClick('aboutDaisetsuzanGrade', function () {
-  pushStateAndNav('aboutDaisetsuzanGrade');
-});
+  try {
+    const host = new URL(element.href).host;
+    return host === HOSTNAME;
+  } catch {
+    return false;
+  }
+}
 
-onClick('blog', function () {
-  pushStateAndNav('blog');
-});
-onClick('aboutUs', function () {
-  pushStateAndNav('aboutUs');
-});
+function hookBlogLinks() {
+  const allLinks = Array.from(document.querySelectorAll("#column a"));
+  const blogLinks = allLinks.filter(isInternalLink);
 
-const navElements = document.querySelectorAll('.navbar-burger,.navbar-menu');
+  blogLinks.forEach((link) => link.addEventListener("click", handleClick));
+}
+
+const navElements = document.querySelectorAll(".navbar-burger,.navbar-menu");
 
 function toggleNavBarClass() {
   for (let element of navElements) {
-    element.classList.toggle('is-active');
+    element.classList.toggle("is-active");
   }
 }
 
 for (let element of navElements) {
   // navElementsは本当のArrayじゃないから、for (... of ...)のみ使える
-  element.addEventListener('click', toggleNavBarClass);
+  element.addEventListener("click", toggleNavBarClass);
 }
 
 window.onpopstate = function () {
@@ -126,6 +146,7 @@ window.onpopstate = function () {
 };
 
 doNav(document.location.hash.substring(2));
+hookNavLinks(); // 一回だけリンクのイベント付け
 
 $(document).ajaxStart(() => {
   NProgress.start();

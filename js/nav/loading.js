@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $ from "jquery";
 
 /**
  * Load content from url and insert it into target element.
@@ -8,7 +8,7 @@ import $ from 'jquery';
 export function loadURL(selector, url) {
   return new Promise((resolve, reject) => {
     $(selector).load(url, (_, status, xhr) => {
-      if (status === 'error') {
+      if (status === "error") {
         reject(new LoadError(xhr.status, xhr.statusText));
       } else {
         resolve();
